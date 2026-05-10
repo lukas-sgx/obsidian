@@ -1,5 +1,5 @@
 # OBSIDIAN REPORT
-Black-box Audit<br>
+## Black-box Audit<br>
 In this phase, we analyzed the binary using reverse engineering tools and manual fuzzing. List of the tools you used :
 - Cutter
 - Ghidra
@@ -9,6 +9,18 @@ In this phase, we analyzed the binary using reverse engineering tools and manual
 #### Key discoveries:
 - The binary was found to be packed with UPX. It was successfully unpacked using `upx -d obsidian`, revealing the original executable for further static analysis. Then I tried to reconstruct path & function usage
 
+## White-box Audit
+With access to source code, we performed a full code review and vulnerability assessment.
+Focus areas:
+- Input validation
+- Memory safety (heap/stack misuse)
+- Format string handling
+- Privilege escalation paths
+Additional vulnerabilities discovered:
+- [Insert findings here]
+List of the tools you used :
+- Visual Studio Code
+- Cutter
 
 ## Vulnerability Report
 Below is the list of vulnerabilities discovered, ranked by severity:
@@ -18,8 +30,9 @@ Below is the list of vulnerabilities discovered, ranked by severity:
 
 
 Severity: Critical<br>
-Type: Hardcoded credentials<br>
-Location: function activate_emergency_protocols<br>
+Type: Hardcoded credentials - Privilege Escalation<br>
+Location: [source_code/src/commands/activate_emergency_protocols.c](source_code/src/commands/activate_emergency_protocols.c#L21)<br>
+Function: `activate_emergency_protocols()`<br>
 Discovered in: Black-box<br>
 
 Description:
@@ -31,26 +44,51 @@ This is a direct authentication design failure: no secret rotation, no per-user 
 
 Proof of Concept:
 ```c
-iVar1 = strcmp(&var_78h, "admin123");
-if (iVar1 == 0) {
-    putstr("{Emergency protocols activated, you are now admin !}");
+if (strcmp(input, "admin123") == 0) {  // Hardcoded password
+    printf("{Emergency protocols activated, you are now admin !}\n");
+    IS_ADMIN = true;
 }
 ```
 
 Impact:<br>
-Privilege Escalation (high-confidence)<br>
+Privilege escalation to admin<br>
 Unauthorized access to admin/emergency controls (high-confidence)<br>
 Potential full operational takeover of Critical reactor functions if this command is reachable in production context (Critical business/operational risk)
 
+### Vulnerability #2: Hardcoded Credentials
 
+Severity: Critical<br>
+Type: Hardcoded Credentials<br>
+Location: [source_code/src/commands/load_config.c](source_code/src/commands/load_config.c#L13)<br>
+Function: `check_password()`<br>
+Discovered in: White-box<br>
 
+Description:
+A sensitive admin password "ThisIsTheBestPassword" is hardcoded as a static string.
+This credential is directly comparable with user input, allowing privilege escalation.
 
-### Vulnerability #2: load_fuel_rods
+Proof of Concept:
+```c
+static char const adminPassword[] = "ThisIsTheBestPassword";  // Hardcoded in binary
+void check_password(char *str) {
+    if (strcmp(str, adminPassword) == 0) {
+        printf("{Correct password! Welcome, admin.}\n");
+    }
+}
+```
+
+Impact:<br>
+Credential exposure via strings command or static analysis<br>
+Privilege escalation for any attacker<br>
+Reusable across multiple systems<br>
+
+### Vulnerability #3: load_fuel_rods
 
 
 Severity: Critical<br>
-Type: Buffer Overflow / Underflow<br>
-Location: load_fuel_rods command path<br>
+Type: Hardcoded Credentials + Logic Error<br>
+Location: [source_code/src/commands/load_fuel_rods.c](source_code/src/commands/load_fuel_rods.c#L24)<br>
+Function: `load_fuel_rods()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -83,7 +121,7 @@ def main():
         output = pid.recvrepeat(timeout=1.2)
         pid.close()
 
-    print(text.red("[+]") + " Vuln Buffer Overflow - load_fuel_rods:")
+    print(text.red("[+]") + " Vuln Hardcoded Credentials - load_fuel_rods:")
     print(output.splitlines()[3][12:-2])
     print()
 
@@ -93,12 +131,9 @@ if __name__ == "__main__":
 ```
 
 Impact:<br>
-Potential code execution or control-flow corruption<br>
-Process crash / denial of service<br>
-High exploitability in native binary context<br>
-
-
-
+Hardcoded secret exposure<br>
+Logic error enabling information disclosure<br>
+Authentication bypass<br>
 
 ### Vulnerability #3: monitor_radiation_levels
 
@@ -133,6 +168,248 @@ Potential code execution in process context<br>
 Severe integrity compromise<br>
 
 
+### Vulnerability #4: Stack-Based Buffer Overflow (gets)
+
+Severity: Critical<br>
+Type: Stack Buffer Overflow<br>
+Location: [source_code/src/commands/monitor_radiation_levels.c](source_code/src/commands/monitor_radiation_levels.c#L13)<br>
+Function: `monitor_radiation_levels()`<br>
+Discovered in: White-box<br>
+
+Description:
+The function uses the deprecated `gets(buffer)` function to read unlimited input into a 10-byte stack buffer.
+The `gets()` function performs NO boundary checking, making this an immediate and trivial stack buffer overflow.
+
+Proof of Concept:
+```c
+void monitor_radiation_levels() {
+    char buffer[10];
+    printf("Enter radiation levels: ");
+    gets(buffer);  // NO SIZE LIMIT - overflow any input > 10 bytes
+    printf("Radiation Levels: %s\n", buffer);
+}
+```
+
+Impact:<br>
+Immediate crash (segfault) on any normal input<br>
+Arbitrary code execution with shellcode injection<br>
+Trivial exploitation<br>
+
+### Vulnerability #4: Buffer Overflow in load_config
+
+Severity: Critical<br>
+Type: Stack Buffer Overflow<br>
+Location: [source_code/src/commands/load_config.c](source_code/src/commands/load_config.c#L25)<br>
+Function: `load_config()`<br>
+Discovered in: White-box<br>
+
+Description:
+The function declares a local buffer `array[8]` but attempts to read 100 bytes into it via `read(fd, array, 100)`.
+This is a classic stack buffer overflow vulnerability that allows an attacker to corrupt the stack, overwrite return addresses, and achieve arbitrary code execution.
+
+Proof of Concept:
+```c
+void load_config() {
+    char array[8] = {};  // Only 8 bytes
+    int fd = open("./config.ini", O_RDONLY);
+    read(fd, array, 100);  // Reads 100 bytes into 8-byte buffer -> OVERFLOW
+    close(fd);
+}
+```
+
+Impact:<br>
+Arbitrary code execution via stack corruption<br>
+Return address hijacking<br>
+Complete system compromise<br>
+
+
+### Vulnerability #5: Format String Vulnerability
+
+Severity: Critical<br>
+Type: Format String Injection<br>
+Location: [source_code/src/utils.c](source_code/src/utils.c#L34)<br>
+Function: `load_obsidianrc()`<br>
+Discovered in: White-box<br>
+
+Description:
+User-controlled input from the `.obsidianrc` configuration file is passed directly to `printf()` without format string protection.
+An attacker can inject format string specifiers like `%x`, `%s`, or `%n` to read/write arbitrary memory.
+
+Proof of Concept:
+```c
+void load_obsidianrc() {
+    FILE *rc_file = fopen(".obsidianrc", "r");
+    while (fgets(line, sizeof(line), rc_file)) {
+        printf("Obsidian command: ");
+        printf(line);  // Format string vulnerability - line is untrusted
+        printf("\n");
+    }
+}
+```
+
+### Vulnerability #6: Command Injection
+
+Severity: Critical<br>
+Type: OS Command Injection<br>
+Location: [source_code/src/commands/configure_cooling_system.c](source_code/src/commands/configure_cooling_system.c#L19)<br>
+Function: `configure_cooling_system()`<br>
+Discovered in: White-box<br>
+
+Description:
+User-controlled data read from a file is passed directly to `system()` without any sanitization.
+An attacker can place arbitrary shell commands in the configuration file to execute system commands with application privileges.
+
+Proof of Concept:
+```c
+void configure_cooling_system() {
+    char buffer[64];
+    FILE *file = fopen("Data/cooling_config.txt", "r");
+    fread(buffer, 1, sizeof(buffer) - 1, file);
+    system(buffer);  // Command injection - buffer is untrusted file data
+}
+```
+
+Impact:<br>
+Arbitrary OS command execution<br>
+Full system compromise<br>
+Data exfiltration and malware installation<br>
+
+### Vulnerability #7: Use After Free
+
+Severity: Critical<br>
+Type: Memory Corruption (Use After Free)<br>
+Location: [source_code/src/commands/check_cooling_pressure.c](source_code/src/commands/check_cooling_pressure.c#L35)<br>
+Function: `check_cooling_pressure()`<br>
+Discovered in: White-box<br>
+
+Description:
+Memory allocated with `malloc(16)` is freed via `free(data)`, but then accessed via `strcmp(data, ...)` on line 35.
+This creates a use-after-free vulnerability that can lead to information disclosure or code execution.
+
+Proof of Concept:
+```c
+void check_cooling_pressure() {
+    char *data = (char *)malloc(16);
+    load_data(data);
+    free(data);
+    sleep(3);
+    if (strcmp(data, "Pressure OK")) {  // Use-after-free - data points to freed memory
+        printf("Sensitive Info: %s\n", sensitive_info);
+    }
+}
+```
+
+Impact:<br>
+Information disclosure via dangling pointer<br>
+Potential code execution with heap layout control<br>
+Process crash or memory corruption<br>
+
+### Vulnerability #8: Memory Corruption via NULL Function Pointer
+
+Severity: Critical<br>
+Type: Memory Corruption<br>
+Location: [source_code/src/commands/monitor_radiation_levels.c](source_code/src/commands/monitor_radiation_levels.c#L4)<br>
+Function: `monitor_radiation_levels()`<br>
+Discovered in: White-box<br>
+
+Description:
+A function pointer is initialized to NULL and then called without verification.
+Combined with the buffer overflow vulnerability on line 13, an attacker can overflow the buffer and write to the function pointer to achieve code execution.
+
+Proof of Concept:
+```c
+void secret_function() {
+    printf("{The stone isn't in the pocket anymore ...}\n");
+}
+
+void monitor_radiation_levels() {
+    char buffer[10];
+    void (* function_ptr)() = NULL;
+    gets(buffer);  // Overflow to write to function_ptr
+    if (function_ptr)
+        function_ptr();  // Call attacker-controlled function
+}
+```
+
+Impact:<br>
+Arbitrary code execution via control-flow hijacking<br>
+Combined with buffer overflow for reliable exploitation<br>
+Complete process compromise<br>
+
+### Vulnerability #9: Directory Traversal (utils.c)
+
+Severity: High<br>
+Type: Directory Traversal / Path Traversal<br>
+Location: [source_code/src/utils.c](source_code/src/utils.c#L15)<br>
+Function: `load_obsidianrc()`<br>
+Discovered in: White-box<br>
+
+Description:
+The `.obsidianrc` configuration file is accessed without path validation using relative path `fopen(".obsidianrc", "r")`.
+An attacker can place a malicious `.obsidianrc` file in any directory and exploit it via:
+1. Format string injection (Vulnerability #3)
+2. Command injection via "exec" commands
+3. Symlink attacks to read arbitrary files
+
+Proof of Concept:
+```c
+rc_file = fopen(".obsidianrc", "r");  // No path validation - relative path
+// Attacker creates: /tmp/exploit/.obsidianrc or uses symlinks
+```
+
+Impact:<br>
+Arbitrary file read via symlinks<br>
+Configuration tampering<br>
+Combined with format string/command injection vulnerabilities<br>
+
+### Vulnerability #10: Directory Traversal (history.c)
+
+Severity: High<br>
+Type: Directory Traversal / Path Traversal<br>
+Location: [source_code/src/commands/history.c](source_code/src/commands/history.c#L6)<br>
+Function: `history_init()`<br>
+Discovered in: White-box<br>
+
+Description:
+The history file is accessed without path validation using `#define HISTORY_FILE ".obsidian_history"`.
+An attacker can create a symlink at `.obsidian_history` pointing to arbitrary files to read them.
+
+Proof of Concept:
+```c
+#define HISTORY_FILE ".obsidian_history"
+file = fopen(HISTORY_FILE, "r");  // No path validation - relative path
+// Attacker: ln -s /etc/passwd .obsidian_history
+```
+
+Impact:<br>
+Arbitrary file read (subject to process privileges)<br>
+Symlink-based privilege escalation<br>
+System information disclosure<br>
+
+### Vulnerability #11: Information Disclosure (log_system_events)
+
+Severity: High<br>
+Type: Information Disclosure + Log Injection<br>
+Location: [source_code/src/commands/log_system_events.c](source_code/src/commands/log_system_event.c#L17)<br>
+Function: `log_system_event()`<br>
+Discovered in: White-box<br>
+
+Description:
+A hardcoded secret key "{SECRET_LOG_12PIERRE34}" is logged to a file when the string "leak" is detected in user input.
+This allows an attacker to intentionally trigger disclosure of sensitive information.
+
+Proof of Concept:
+```c
+char secret_key[32] = "{SECRET_LOG_12PIERRE34}";
+if (strstr(input, "leak")) {  // Attacker inputs "leak" to trigger disclosure
+    fprintf(log, "SECRET_KEY_LEAKED: %s\n", secret_key);
+}
+```
+
+Impact:<br>
+Unauthorized disclosure of sensitive operational information<br>
+Attacker-controlled information leak<br>
+Persistence of secrets in log files<br>
 
 
 ### Vulnerability #4: alchemy
@@ -235,8 +512,9 @@ Facilitates chained attacks with other privileged functions
 
 
 Severity: High<br>
-Type: Hardcoded credentials<br>
-Location: run_diagnostic command path<br>
+Type: Information Disclosure<br>
+Location: [source_code/src/commands/run_diagnostic.c](source_code/src/commands/run_diagnostic.c#L31)<br>
+Function: `run_diagnostic()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -265,7 +543,7 @@ def main():
     pid.sendline(b'debug')
     line = pid.recvlines(timeout=1.0)
 
-    print(text.red("[+]") + " Vuln Harcoded Credentials - run_diagnostic:")
+    print(text.red("[+]") + " Vuln Information Disclosure - run_diagnostic:")
     print(line[1].decode()[19:])
     print()
 
