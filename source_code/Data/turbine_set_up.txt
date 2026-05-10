@@ -1,0 +1,16 @@
+# Turbine Configuration File
+# This file contains the configuration settings for the turbine system.
+
+[TurbineSettings]
+MaxRPM = 1500
+MinRPM = 500
+Efficiency = 85%
+
+[SafetyLimits]
+MaxTemperature = 600
+MinTemperature = 100
+ShutdownThreshold = 95%
+
+[Diagnostics]
+LastInspectionDate = 2025-04-01
+InspectionInterval = 6 months

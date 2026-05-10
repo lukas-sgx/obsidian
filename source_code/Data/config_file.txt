@@ -1,0 +1,33 @@
+Reactor configuration :
+
+# General Settings
+Reactor_ID: RX-210
+Location: Sector-7G
+Status: Operational
+Last_Maintenance_Date: 2025-03-01
+
+# Core Specifications
+Core_Type: Pressurized_Water_Reactor
+Core_Temperature: 320°C
+Core_Pressure: 155 bar
+Fuel_Type: Uranium-235
+Fuel_Rods: 193
+
+# Cooling System
+Primary_Coolant: Water
+Coolant_Flow_Rate: 5000 L/min
+Backup_Cooling_System: Active
+
+# Safety Systems
+Emergency_Shutdown: Enabled
+Radiation_Levels: Normal
+Containment_Structure: Reinforced_Concrete
+
+# Power Output
+Max_Output: 1000 MW
+Current_Output: 850 MW
+
+# Sensors
+Temperature_Sensors: 12
+Pressure_Sensors: 8
+Radiation_Sensors: 5
