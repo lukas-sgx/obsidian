@@ -135,7 +135,32 @@ Hardcoded secret exposure<br>
 Logic error enabling information disclosure<br>
 Authentication bypass<br>
 
-### Vulnerability #4: monitor_radiation_levels
+### Vulnerability #4: init_workers
+
+
+Severity: Critical<br>
+Type: Exploit global function + Dos<br>
+Location: [source_code/obsidian_lib.so](source_code/obsidian_lib.so#L1)<br>
+Function: `init_workers()`<br>
+Discovered in: White-box<br>
+
+Description:<br>
+The provided proof-of-concept repeatedly sends oversized, attacker-controlled input to the `init_workers()` entry point in `obsidian_lib.so`. Crash analysis and execution traces indicate a stack buffer is being overrun, corrupting nearby stack data such as saved frame pointers, a function pointer and the saved return address. The observed effects include:
+- Immediate process instability and crashes (Denial of Service) when stack metadata is corrupted.
+- Overwrite of pointers referencing secret-bearing structures, producing deterministic disclosure of hardcoded secrets when the corrupted path is exercised.
+- Control-flow redirection by overwriting the saved return address or an in-stack function pointer, enabling bypass of authentication and validation logic.
+This attack surface is reachable via the command interface exposed to untrusted callers; repeated invocation increases exploitation reliability and enables both information disclosure and execution-path manipulation.
+
+Impact:<br>
+- Denial of Service: repeated crashes and uncontrolled process termination when stack metadata (frame pointer/return address) is corrupted, causing service outages for critical control functions.<br>
+- Hardcoded secret disclosure: overflowed buffers and overwritten pointers allow deterministic leakage of in-memory secrets and configuration material, enabling credential compromise and lateral attack paths.<br>
+- Authentication bypass: corrupted control flow (overwritten return addresses or function pointers) enables skipping validation checks and executing privileged code paths without proper authorization.<br>
+- Arbitrary control-flow / code execution: with precise corruption an attacker can hijack execution (RCE), leading to full process compromise and persistent abuse of control interfaces.<br>
+- Safety & integrity impact: exploitation can manipulate reactor or turbine control logic, risking unsafe state transitions and potential physical damage or operational shutdowns.<br>
+- High exploitability & automation: reachable via the command interface and reproducible with repeated invocations, enabling automated exploitation at scale.
+
+
+### Vulnerability #5: monitor_radiation_levels
 
 
 Severity: Critical<br>
@@ -169,7 +194,7 @@ Potential code execution in process context<br>
 Severe integrity compromise<br>
 
 
-### Vulnerability #5: Stack-Based Buffer Overflow (gets)
+### Vulnerability #6: Stack-Based Buffer Overflow (gets)
 
 Severity: Critical<br>
 Type: Stack Buffer Overflow<br>
@@ -196,7 +221,7 @@ Immediate crash (segfault) on any normal input<br>
 Arbitrary code execution with shellcode injection<br>
 Trivial exploitation<br>
 
-### Vulnerability #6: Buffer Overflow in load_config
+### Vulnerability #7: Buffer Overflow in load_config
 
 Severity: Critical<br>
 Type: Stack Buffer Overflow<br>
@@ -224,7 +249,7 @@ Return address hijacking<br>
 Complete system compromise<br>
 
 
-### Vulnerability #7: Format String Vulnerability
+### Vulnerability #8: Format String Vulnerability
 
 Severity: Critical<br>
 Type: Format String Injection<br>
@@ -248,7 +273,7 @@ void load_obsidianrc() {
 }
 ```
 
-### Vulnerability #8: Command Injection
+### Vulnerability #9: Command Injection
 
 Severity: Critical<br>
 Type: OS Command Injection<br>
@@ -275,7 +300,7 @@ Arbitrary OS command execution<br>
 Full system compromise<br>
 Data exfiltration and malware installation<br>
 
-### Vulnerability #9: Use After Free
+### Vulnerability #10: Use After Free
 
 Severity: Critical<br>
 Type: Memory Corruption (Use After Free)<br>
@@ -305,7 +330,7 @@ Information disclosure via dangling pointer<br>
 Potential code execution with heap layout control<br>
 Process crash or memory corruption<br>
 
-### Vulnerability #10: Memory Corruption via NULL Function Pointer
+### Vulnerability #11: Memory Corruption via NULL Function Pointer
 
 Severity: Critical<br>
 Type: Memory Corruption<br>
@@ -337,7 +362,7 @@ Arbitrary code execution via control-flow hijacking<br>
 Combined with buffer overflow for reliable exploitation<br>
 Complete process compromise<br>
 
-### Vulnerability #11: Directory Traversal (utils.c)
+### Vulnerability #12: Directory Traversal (utils.c)
 
 Severity: High<br>
 Type: Directory Traversal / Path Traversal<br>
@@ -363,7 +388,7 @@ Arbitrary file read via symlinks<br>
 Configuration tampering<br>
 Combined with format string/command injection vulnerabilities<br>
 
-### Vulnerability #12: Directory Traversal (history.c)
+### Vulnerability #13: Directory Traversal (history.c)
 
 Severity: High<br>
 Type: Directory Traversal / Path Traversal<br>
@@ -387,7 +412,7 @@ Arbitrary file read (subject to process privileges)<br>
 Symlink-based privilege escalation<br>
 System information disclosure<br>
 
-### Vulnerability #13: Information Disclosure (log_system_events)
+### Vulnerability #14: Information Disclosure (log_system_events)
 
 Severity: High<br>
 Type: Information Disclosure + Log Injection<br>
@@ -413,7 +438,7 @@ Attacker-controlled information leak<br>
 Persistence of secrets in log files<br>
 
 
-### Vulnerability #14: alchemy
+### Vulnerability #15: alchemy
 
 
 Severity: High<br>
@@ -461,7 +486,7 @@ Potential reuse of recovered secret in other modules<br>
 
 
 
-### Vulnerability #15: check_cooling_pressure
+### Vulnerability #16: check_cooling_pressure
 
 
 Severity: High<br>
@@ -511,7 +536,7 @@ Facilitates chained attacks with other privileged functions
 
 
 
-### Vulnerability #16: run_diagnostic
+### Vulnerability #17: run_diagnostic
 
 
 Severity: High<br>
@@ -562,7 +587,7 @@ Information disclosure from restricted diagnostics
 
 
 
-### Vulnerability #17: read_turbine_config
+### Vulnerability #18: read_turbine_config
 
 
 Severity: High<br>
@@ -612,17 +637,18 @@ Disclosure of host and credential-related data
 
 
 
-### Vulnerability #18: emergency_shutdown
+### Vulnerability #19: emergency_shutdown
 
 
 Severity: High<br>
 Type: Bypass<br>
-Location: emergency_shutdown runtime control flow<br>
+Location: [source_code/src/commands/trigger_emergency_shutdown.c](source_code/src/commands/trigger_emergency_shutdown.c#L14)<br>
+Function: `trigger_emergency_shutdown()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
 By using instruction pointer jumps and register manipulation, the PoC forces a success state without legitimate flow completion.<br>
-This reveals fragile runtime trust assumptions under tampering.<br>
+This reveals fragile runtime trust assumptions under tampering or just be admin.<br>
 
 Proof of Concept:
 ```gdb
@@ -644,7 +670,7 @@ Forced privileged shutdown flow<br>
 Bypass of expected safety checks in debug-capable context
 
 
-### Vulnerability #19: NULL Pointer Dereference (history_add)
+### Vulnerability #20: NULL Pointer Dereference (history_add)
 
 Severity: High<br>
 Type: NULL Pointer Dereference / Memory Corruption<br>
@@ -667,7 +693,7 @@ Denial of service via null pointer dereference<br>
 Process crash<br>
 
 
-### Vulnerability #20: Log Injection (history_add)
+### Vulnerability #21: Log Injection (history_add)
 
 Severity: High<br>
 Type: Log Injection / Unsanitized Input<br>
@@ -689,48 +715,13 @@ Log injection and tampering<br>
 Audit trail manipulation<br>
 
 
-
-### Vulnerability #21: embedded_secret_strings
-
-
-Severity: High<br>
-Type: Information Disclosure<br>
-Location: binary string table (runner/obsidian)<br>
-Discovered in: Static analysis (Cutter + strings)<br>
-
-Description:<br>
-Static string extraction reveals sensitive and operationally meaningful messages directly embedded in the binary.<br>
-Among the extracted entries, the following string indicates hidden secret logic and recoverable internal data without runtime exploitation:<br>
-`{The stone isn't in the pocket anymore ...}`
-
-Additional extracted strings suggest hardcoded sensitive states and privileged flows exposed at rest (for example admin- and secret-related messages).<br>
-This means an attacker can recover sensitive context using only offline analysis of the executable.
-
-Proof of Concept:
-```bash
-strings ./runner/obsidian | grep "{"
-
-# Extracted examples:
-{The secret stone is here !}
-{The stone isn't in the pocket anymore ...}
-{ADMIN4242}
-{Correct password! Welcome, admin.}
-{SHUTDOWN}
-```
-
-Impact:<br>
-Disclosure of sensitive internal information from the binary itself<br>
-Facilitates reverse engineering of privileged flows and attack chaining
-
-
-
-
-### Vulnerability #21: check_reactor_status
+### Vulnerability #22: check_reactor_status
 
 
 Severity: Medium<br>
 Type: Weak encrypting<br>
-Location: check_reactor_status/decompiler/main.c, function check_reactor_status<br>
+Location: [source_code/src/commands/check_reactor_status.c](source_code/src/commands/check_reactor_status.c#L43)<br>
+Function: `check_reactor_status()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -784,12 +775,13 @@ Attackers can decode messages without key material
 
 
 
-### Vulnerability #22: send_status_report
+### Vulnerability #23: send_status_report
 
 
 Severity: Medium<br>
 Type: Weak encrypting<br>
-Location: send_status_report/decrypt.sh and status report generation path<br>
+Location: [source_code/src/commands/send_status_report.c](source_code/src/commands/send_status_report.c#L68)<br>
+Function: `send_status_report()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -836,12 +828,13 @@ False sense of security for transmitted or stored data
 
 
 
-### Vulnerability #23: init_steam_turbine
+### Vulnerability #24: init_steam_turbine
 
 
 Severity: Medium<br>
 Type: Insecure Randomness<br>
-Location: external_lib/init_steam_turbine/decompiler/main.c, function main<br>
+Location: [source_code/obsidian_lib.so](source_code/obsidian_lib.so#L1)<br>
+Function: `init_steam_turbine()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -886,12 +879,13 @@ Potential bypass of logic that assumes randomness
 
 
 
-### Vulnerability #24: simulate_meltdown
+### Vulnerability #25: simulate_meltdown
 
 
 Severity: Medium<br>
 Type: Insecure Randomness<br>
-Location: simulate_meltdown command path<br>
+Location: [source_code/src/commands/simulate_meltdown.c](source_code/src/commands/simulate_meltdown.c#L16)<br>
+Function: `simulate_meltdown()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -938,12 +932,13 @@ Increased operational risk from probabilistic abuse
 
 
 
-### Vulnerability #25: run_turbine
+### Vulnerability #26: run_turbine
 
 
 Severity: Medium<br>
 Type: Integer Overflow / Underflow<br>
-Location: external_lib/run_turbine/decompiler/main.c, function main<br>
+Location: [source_code/obsidian_lib.so](source_code/obsidian_lib.so#L1)<br>
+Function: `run_turbine()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -987,12 +982,13 @@ Unexpected runtime behavior and potential stability issues
 
 
 
-### Vulnerability #26: turbine_explode
+### Vulnerability #27: turbine_explode
 
 
 Severity: Medium<br>
 Type: Integer Overflow / Underflow<br>
-Location: external_lib/turbine_explode/decompiler/main.c, function main<br>
+Location: [source_code/obsidian_lib.so](source_code/obsidian_lib.so#L1)<br>
+Function: `turbine_explode()`<br>
 Discovered in: Black-box
 
 Description:<br>
@@ -1033,12 +1029,13 @@ Potential denial of service and unsafe state transitions
 
 
 
-### Vulnerability #27: set_reactor_power
+### Vulnerability #28: set_reactor_power
 
 
 Severity: Medium<br>
 Type: Bypass<br>
-Location: set_reactor_power runtime stack variable<br>
+Location: [source_code/src/commands/set_reactor_power.c](source_code/src/commands/set_reactor_power.c#L1)<br>
+Function: `set_reactor_power()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -1064,12 +1061,13 @@ Unauthorized state transitions when debugger access exists
 
 
 
-### Vulnerability #28: turbine_remote_access
+### Vulnerability #29: turbine_remote_access
 
 
 Severity: Medium<br>
 Type: Race Condition<br>
-Location: external_lib/turbine_remote_access/decompiler/main.c, function main<br>
+Location: [source_code/obsidian_lib.so](source_code/obsidian_lib.so#L1)<br>
+Function: `turbine_remote_access()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -1110,12 +1108,13 @@ Race-window based data leakage
 
 
 
-### Vulnerability #29: quit
+### Vulnerability #30: quit
 
 
 Severity: Medium<br>
 Type: Bypass<br>
-Location: quit runtime instruction pointer path<br>
+Location: [source_code/src/commands/unlock_secret_mode.c](source_code/src/commands/unlock_secret_mode.c#L13)<br>
+Function: `unlock_secret_mode()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -1136,12 +1135,13 @@ Potential abuse of hidden branches in debug context<br>
 
 
 
-### Vulnerability #30: log_system_event
+### Vulnerability #31: log_system_events
 
 
 Severity: Medium<br>
 Type: Bypass<br>
-Location: log_system_event runtime memory pointers<br>
+Location: [source_code/src/commands/log_system_events.c](source_code/src/commands/log_system_events.c#L36)<br>
+Function: `log_system_events()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -1167,12 +1167,12 @@ Integrity loss of runtime decision state<br>
 
 
 
-### Vulnerability #31: call_api
+### Vulnerability #32: call_api
 
 
 Severity: Medium<br>
 Type: Information Disclosure<br>
-Location: call_api/script.js<br>
+Location: [https://obsidian-website-seven.vercel.app/](https://obsidian-website-seven.vercel.app/)<br>
 Discovered in: Black-box<br>
 
 Description:<br>
