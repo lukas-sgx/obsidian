@@ -17,7 +17,7 @@ Focus areas:
 - Format string handling
 - Privilege escalation paths
 Additional vulnerabilities discovered:
-- [Insert findings here]
+- 31 vulnerabilities identified with combined black-box and white-box analysis
 List of the tools you used :
 - Visual Studio Code
 - Cutter
@@ -135,12 +135,13 @@ Hardcoded secret exposure<br>
 Logic error enabling information disclosure<br>
 Authentication bypass<br>
 
-### Vulnerability #3: monitor_radiation_levels
+### Vulnerability #4: monitor_radiation_levels
 
 
 Severity: Critical<br>
 Type: Memory corruption<br>
-Location: monitor_radiation_levels runtime stack frame<br>
+Location: [source_code/src/commands/monitor_radiation_levels.c](source_code/src/commands/monitor_radiation_levels.c#L24)<br>
+Function: `monitor_radiation_levels()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -168,7 +169,7 @@ Potential code execution in process context<br>
 Severe integrity compromise<br>
 
 
-### Vulnerability #4: Stack-Based Buffer Overflow (gets)
+### Vulnerability #5: Stack-Based Buffer Overflow (gets)
 
 Severity: Critical<br>
 Type: Stack Buffer Overflow<br>
@@ -195,7 +196,7 @@ Immediate crash (segfault) on any normal input<br>
 Arbitrary code execution with shellcode injection<br>
 Trivial exploitation<br>
 
-### Vulnerability #4: Buffer Overflow in load_config
+### Vulnerability #6: Buffer Overflow in load_config
 
 Severity: Critical<br>
 Type: Stack Buffer Overflow<br>
@@ -223,7 +224,7 @@ Return address hijacking<br>
 Complete system compromise<br>
 
 
-### Vulnerability #5: Format String Vulnerability
+### Vulnerability #7: Format String Vulnerability
 
 Severity: Critical<br>
 Type: Format String Injection<br>
@@ -247,7 +248,7 @@ void load_obsidianrc() {
 }
 ```
 
-### Vulnerability #6: Command Injection
+### Vulnerability #8: Command Injection
 
 Severity: Critical<br>
 Type: OS Command Injection<br>
@@ -274,7 +275,7 @@ Arbitrary OS command execution<br>
 Full system compromise<br>
 Data exfiltration and malware installation<br>
 
-### Vulnerability #7: Use After Free
+### Vulnerability #9: Use After Free
 
 Severity: Critical<br>
 Type: Memory Corruption (Use After Free)<br>
@@ -304,7 +305,7 @@ Information disclosure via dangling pointer<br>
 Potential code execution with heap layout control<br>
 Process crash or memory corruption<br>
 
-### Vulnerability #8: Memory Corruption via NULL Function Pointer
+### Vulnerability #10: Memory Corruption via NULL Function Pointer
 
 Severity: Critical<br>
 Type: Memory Corruption<br>
@@ -336,7 +337,7 @@ Arbitrary code execution via control-flow hijacking<br>
 Combined with buffer overflow for reliable exploitation<br>
 Complete process compromise<br>
 
-### Vulnerability #9: Directory Traversal (utils.c)
+### Vulnerability #11: Directory Traversal (utils.c)
 
 Severity: High<br>
 Type: Directory Traversal / Path Traversal<br>
@@ -362,7 +363,7 @@ Arbitrary file read via symlinks<br>
 Configuration tampering<br>
 Combined with format string/command injection vulnerabilities<br>
 
-### Vulnerability #10: Directory Traversal (history.c)
+### Vulnerability #12: Directory Traversal (history.c)
 
 Severity: High<br>
 Type: Directory Traversal / Path Traversal<br>
@@ -386,7 +387,7 @@ Arbitrary file read (subject to process privileges)<br>
 Symlink-based privilege escalation<br>
 System information disclosure<br>
 
-### Vulnerability #11: Information Disclosure (log_system_events)
+### Vulnerability #13: Information Disclosure (log_system_events)
 
 Severity: High<br>
 Type: Information Disclosure + Log Injection<br>
@@ -412,12 +413,13 @@ Attacker-controlled information leak<br>
 Persistence of secrets in log files<br>
 
 
-### Vulnerability #4: alchemy
+### Vulnerability #14: alchemy
 
 
 Severity: High<br>
 Type: Hardcoded credentials<br>
-Location: alchemy/decompiler/main.c, function alchemy<br>
+Location: [source_code/src/laboratory.a](source_code/src/laboratory.a#L1)<br>
+Function: `alchemy()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -459,12 +461,13 @@ Potential reuse of recovered secret in other modules<br>
 
 
 
-### Vulnerability #5: check_cooling_pressure
+### Vulnerability #15: check_cooling_pressure
 
 
 Severity: High<br>
-Type: Hardcoded credentials<br>
-Location: check_cooling_pressure command flow (runtime output path)<br>
+Type: Use After Free<br>
+Location: [source_code/src/commands/check_cooling_pressure.c](source_code/src/commands/check_cooling_pressure.ca#L43)<br>
+Function: `alchemy()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -508,7 +511,7 @@ Facilitates chained attacks with other privileged functions
 
 
 
-### Vulnerability #6: run_diagnostic
+### Vulnerability #16: run_diagnostic
 
 
 Severity: High<br>
@@ -559,12 +562,13 @@ Information disclosure from restricted diagnostics
 
 
 
-### Vulnerability #7: read_turbine_config
+### Vulnerability #17: read_turbine_config
 
 
 Severity: High<br>
 Type: Directory traversal<br>
-Location: external_lib/read_turbine_config/decompiler/main.c, function main<br>
+Location: [source_code/obsidian_lib.so](source_code/obsidian_lib.so#L1)<br>
+Function: `run_diagnostic()`<br>
 Discovered in: Black-box<br>
 
 Description:<br>
@@ -608,7 +612,7 @@ Disclosure of host and credential-related data
 
 
 
-### Vulnerability #8: emergency_shutdown
+### Vulnerability #18: emergency_shutdown
 
 
 Severity: High<br>
@@ -640,9 +644,53 @@ Forced privileged shutdown flow<br>
 Bypass of expected safety checks in debug-capable context
 
 
+### Vulnerability #19: NULL Pointer Dereference (history_add)
+
+Severity: High<br>
+Type: NULL Pointer Dereference / Memory Corruption<br>
+Location: [source_code/src/commands/history.c](source_code/src/commands/history.c#L54)<br>
+Function: `history_add()`<br>
+Discovered in: White-box<br>
+
+Description:
+When shifting history entries, the code accesses `history[i+1]` without null checking.
+If the history array contains NULL entries, this dereferences NULL and causes a crash.
+
+Proof of Concept:
+```c
+for (int i = 0; i < history_count - 1; i++)
+    history[i] = history[i + 1];  // No null check - may dereference NULL
+```
+
+Impact:<br>
+Denial of service via null pointer dereference<br>
+Process crash<br>
 
 
-### Vulnerability #9: embedded_secret_strings
+### Vulnerability #20: Log Injection (history_add)
+
+Severity: High<br>
+Type: Log Injection / Unsanitized Input<br>
+Location: [source_code/src/commands/history.c](source_code/src/commands/history.c#L54)<br>
+Function: `history_add()`<br>
+Discovered in: White-box<br>
+
+Description:
+User input from history command is written directly to a log file without sanitization.
+This allows attackers to inject arbitrary content into logs, forging audit trails.
+
+Proof of Concept:
+```c
+fprintf(file, "%s\n", history[i]);  // Unsanitized user input written to log
+```
+
+Impact:<br>
+Log injection and tampering<br>
+Audit trail manipulation<br>
+
+
+
+### Vulnerability #21: embedded_secret_strings
 
 
 Severity: High<br>
@@ -677,7 +725,7 @@ Facilitates reverse engineering of privileged flows and attack chaining
 
 
 
-### Vulnerability #10: check_reactor_status
+### Vulnerability #21: check_reactor_status
 
 
 Severity: Medium<br>
@@ -736,7 +784,7 @@ Attackers can decode messages without key material
 
 
 
-### Vulnerability #11: send_status_report
+### Vulnerability #22: send_status_report
 
 
 Severity: Medium<br>
@@ -788,7 +836,7 @@ False sense of security for transmitted or stored data
 
 
 
-### Vulnerability #12: init_steam_turbine
+### Vulnerability #23: init_steam_turbine
 
 
 Severity: Medium<br>
@@ -838,7 +886,7 @@ Potential bypass of logic that assumes randomness
 
 
 
-### Vulnerability #13: simulate_meltdown
+### Vulnerability #24: simulate_meltdown
 
 
 Severity: Medium<br>
@@ -890,7 +938,7 @@ Increased operational risk from probabilistic abuse
 
 
 
-### Vulnerability #14: run_turbine
+### Vulnerability #25: run_turbine
 
 
 Severity: Medium<br>
@@ -939,7 +987,7 @@ Unexpected runtime behavior and potential stability issues
 
 
 
-### Vulnerability #15: turbine_explode
+### Vulnerability #26: turbine_explode
 
 
 Severity: Medium<br>
@@ -985,7 +1033,7 @@ Potential denial of service and unsafe state transitions
 
 
 
-### Vulnerability #16: set_reactor_power
+### Vulnerability #27: set_reactor_power
 
 
 Severity: Medium<br>
@@ -1016,7 +1064,7 @@ Unauthorized state transitions when debugger access exists
 
 
 
-### Vulnerability #17: turbine_remote_access
+### Vulnerability #28: turbine_remote_access
 
 
 Severity: Medium<br>
@@ -1062,7 +1110,7 @@ Race-window based data leakage
 
 
 
-### Vulnerability #18: quit
+### Vulnerability #29: quit
 
 
 Severity: Medium<br>
@@ -1088,7 +1136,7 @@ Potential abuse of hidden branches in debug context<br>
 
 
 
-### Vulnerability #19: log_system_event
+### Vulnerability #30: log_system_event
 
 
 Severity: Medium<br>
@@ -1119,7 +1167,7 @@ Integrity loss of runtime decision state<br>
 
 
 
-### Vulnerability #20: call_api
+### Vulnerability #31: call_api
 
 
 Severity: Medium<br>
@@ -1142,7 +1190,6 @@ for (let i = 0; i < 20; i++) {
 Impact:<br>
 Exposure of embedded secret values<br>
 Loss of confidentiality for client-distributed logic/data<br>
-
 
 
 
