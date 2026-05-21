@@ -1,12 +1,4 @@
-##
-## Makefile for obsidian in /home/obsidian
-##
-## Made by Joffrey Z.
-## Login	<alexandre1.renaud@epitech.eu>
-##
-## Started on	Mon	Apr	2	11:57:00	2013	Théo Pierre
-## Last update	Mon	Apr	2	11:58:42	2012	Théodore Poche
-##
+CC = epiclang
 
 B_SRC	=	src/commands/activate_emergency_protocols.c	\
 			src/commands/check_cooling_pressure.c	\
@@ -40,8 +32,6 @@ OBJ	= $(B_OBJ) $(G_OBJ)
 
 NAME =	obsidian
 
-CC ?= gcc
-
 LDLIBS =  -ldl
 
 CFLAGS += -Wall -Wextra -fPIC -fno-stack-protector -Wno-implicit-function-declaration -fno-pie
@@ -55,7 +45,7 @@ $(B_OBJ): CFLAGS +=
 $(G_OBJ): CFLAGS += -g3 -ggdb
 
 $(NAME): $(OBJ)
-	$(CC) -static -o $@ $^ $(LDFLAGS) $(LDLIBS) -s -no-pie laboratory.a
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS) -s -no-pie laboratory.a
 	upx --best $(NAME)
 
 clean:
