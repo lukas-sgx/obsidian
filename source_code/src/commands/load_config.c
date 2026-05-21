@@ -9,34 +9,31 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#include "obsidian.h"
 
-void why_do_i_exist() {
-    asm volatile (
-        "pop %rdi\n"
-        "ret\n"
-    );
-}
-
-static char const adminPassword[] = "ThisIsTheBestPassword"; // Hardcoded Ccredentials
+static char const adminPassword[] =
+    "ThisIsTheBestPassword";
 
 void check_password(char *str)
 {
-    if (strcmp(str, adminPassword) == 0) {
-        printf("{Correct password! Welcome, admin.}\n"); // Flag
-    }
+    if (strcmp(str, adminPassword) == 0)
+        printf("{Correct password! Welcome, admin.}\n");
 }
 
-void load_config()
+void load_config(char *input, history_t *history)
 {
     char array[8] = {};
-    dprintf(1, "Loading configuration file from ./config.ini\n");
-    int fd = open("./config.ini", O_RDONLY);
+    int fd;
 
-    read(fd, array, 100);
-    if (0 /* TODO */) {
-    } else {
+    (void) input;
+    (void) history;
+    dprintf(1, "Loading configuration file from ./config.ini\n");
+    fd = open("./config.ini", O_RDONLY);
+    read(fd, array, sizeof(array));
+    if (0)
+        ;
+    else
         printf("failure!\n");
-    }
     close(fd);
     return;
 }
