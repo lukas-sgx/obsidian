@@ -1,0 +1,96 @@
+diff --git a/source_code/src/commands/simulate_meltdown.c b/source_code/src/commands/simulate_meltdown.c
+index e7bc2dd..f90a923 100644
+--- a/source_code/src/commands/simulate_meltdown.c
++++ b/source_code/src/commands/simulate_meltdown.c
+@@ -9,33 +9,68 @@
+ #include <stdlib.h>
+ #include <time.h>
+ #include <string.h>
++#include "obsidian.h"
+ 
+-void simulate_meltdown()
++static int maybe_leak_secret_code(int random_number, const char *secret_code)
+ {
+-    char reactor_status[32] = "Reactor Stable";
+-    int random_number = rand() % 100; // Race condition
+-    char secret_code[16] = "{MELTDOWN1234}";
++    if (random_number < 5) {
++        printf("Critical Error: Secret Code Leaked: %s\n", secret_code);
++        return 1;
++    }
++    return 0;
++}
+ 
+-    printf("Generated random number: %d\n", random_number);
++static void print_status_report(int random_number, const char *reactor_status)
++{
++    printf("Reactor core temperature: %d\n", random_number);
++    printf("Reactor core status: %s\n", reactor_status);
++}
++
++static void report_status(int random_number, const char *message,
++    const char *reactor_status)
++{
++    printf("%s\n", message);
++    print_status_report(random_number, reactor_status);
++}
++
++static void report_overheating(int random_number)
++{
++    const char secret_code[] = "{MELTDOWN1234}";
+ 
++    printf("Meltdown simulated! Reactor core is overheating.\n");
++    if (maybe_leak_secret_code(random_number, secret_code))
++        return;
++    print_status_report(random_number, "Reactor Overheating");
++}
++
++static void handle_meltdown_status(int random_number)
++{
+     if (random_number < 10) {
+-        printf("Meltdown simulated! Reactor core is overheating.\n");
+-        strcpy(reactor_status, "Reactor Overheating");
+-
+-        if (random_number < 5) {
+-            printf("Critical Error: Secret Code Leaked: %s\n", secret_code);
+-            return;
+-        }
+-    } else if (random_number < 20) {
+-        printf("Warning: Reactor core temperature rising.\n");
+-        strcpy(reactor_status, "Reactor Warning");
+-    } else if (random_number < 50) {
+-        printf("Alert: Reactor core temperature stable.\n");
+-        strcpy(reactor_status, "Reactor Stable");
+-    } else {
+-        printf("Reactor core temperature normal.\n");
+-        strcpy(reactor_status, "Reactor Normal");
++        report_overheating(random_number);
++        return;
+     }
+-    printf("Reactor core temperature: %d\n", random_number);
+-    printf("Reactor core status: %s\n", reactor_status);
++    if (random_number < 20) {
++        report_status(random_number,
++            "Warning: Reactor core temperature rising.",
++            "Reactor Warning");
++        return;
++    }
++    if (random_number < 50) {
++        report_status(random_number,
++            "Alert: Reactor core temperature stable.",
++            "Reactor Stable");
++        return;
++    }
++    report_status(random_number, "Reactor core temperature normal.",
++        "Reactor Normal");
++}
++
++void simulate_meltdown(char *input, history_t *history)
++{
++    int random_number = rand() % 100;
++
++    (void) input;
++    (void) history;
++    printf("Generated random number: %d\n", random_number);
++    handle_meltdown_status(random_number);
+ }
