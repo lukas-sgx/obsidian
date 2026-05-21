@@ -1,0 +1,231 @@
+diff --git a/source_code/src/commands/history.c b/source_code/src/commands/history.c
+index 1495158..58e06f5 100644
+--- a/source_code/src/commands/history.c
++++ b/source_code/src/commands/history.c
+@@ -1,102 +1,158 @@
++/*
++** EPITECH PROJECT, 2026
++** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/src/commands
++** File description:
++** history.c
++*/
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include "history.h"
+ 
+-#define HISTORY_FILE ".obsidian_history" // Path Traversal via history execute
+-#define MAX_HISTORY_SIZE 1000
++static int append_history_entry(
++    char **history_command,
++    history_t *history,
++    const char *line)
++{
++    history_command[history->history_count] = strdup(line);
++    if (history_command[history->history_count] == NULL)
++        return 0;
++    history->history_count++;
++    return 1;
++}
+ 
+-static char **history = NULL;
+-static int history_count = 0;
+-static int history_size = 0;
++static void shift_history_entries(char **command_history, int history_count)
++{
++    int i;
+ 
+-void history_init(void)
++    for (i = 0; i < history_count - 1; i++)
++        command_history[i] = command_history[i + 1];
++}
++
++static void write_history_file(char **command_history, int history_count)
+ {
+     FILE *file;
+-    char line[MAX_COMMAND_LENGTH];
+-    
+-    history = malloc(sizeof(char *) * MAX_HISTORY_SIZE);
+-    if (!history)
++    int i;
++
++    file = fopen(HISTORY_FILE, "w");
++    if (file == NULL)
+         return;
+-        
+-    history_size = MAX_HISTORY_SIZE;
+-    history_count = 0;
+-    
+-    file = fopen(HISTORY_FILE, "r");
+-    if (file) {
+-        while (fgets(line, sizeof(line), file) && history_count < MAX_HISTORY_SIZE) {
+-            line[strcspn(line, "\n")] = '\0';
+-            if (strlen(line) > 0) {
+-                history[history_count] = strdup(line);
+-                if (history[history_count])
+-                    history_count++;
+-            }
+-        }
+-        fclose(file);
++    for (i = 0; i < history_count; i++)
++        fprintf(file, "%s\n", command_history[i]);
++    fclose(file);
++}
++
++static void load_history_entries(
++    FILE *file,
++    history_t *history,
++    char **history_command)
++{
++    char line[MAX_COMMAND_LENGTH];
++
++    while (fgets(line, sizeof(line), file) != NULL &&
++        history->history_count < MAX_HISTORY_SIZE) {
++        line[strcspn(line, "\n")] = '\0';
++        if (line[0] == '\0')
++            continue;
++        if (!append_history_entry(history_command, history, line))
++            break;
+     }
+ }
+ 
+-void history_add(const char *command)
++static void load_history_file(history_t *history, char **history_command)
+ {
+-    if (!command || strlen(command) == 0 ||
+-        (history_count > 0 && strcmp(history[history_count - 1], command) == 0))
++    FILE *file;
++
++    file = fopen(HISTORY_FILE, "r");
++    if (file == NULL)
+         return;
++    load_history_entries(file, history, history_command);
++    fclose(file);
++}
+ 
+-    if (history_count == history_size) {
+-        free(history[0]);
+-        for (int i = 0; i < history_count - 1; i++)
+-            history[i] = history[i + 1]; // no verif if null
+-        history_count--;
++history_t *history_init(void)
++{
++    char **history_command;
++    history_t *history;
++
++    history = malloc(sizeof(history_t));
++    if (history == NULL)
++        return NULL;
++    history_command = malloc(sizeof(char *) * MAX_HISTORY_SIZE);
++    if (history_command == NULL) {
++        free(history);
++        return NULL;
+     }
++    history->command = history_command;
++    history->is_admin = 0;
++    history->history_count = 0;
++    load_history_file(history, history_command);
++    return history;
++}
+ 
+-    history[history_count] = strdup(command);
+-    if (history[history_count])
+-        history_count++;
++void history_add(const char *command, history_t *history)
++{
++    char **command_history;
++    int history_count;
+ 
+-    FILE *file = fopen(HISTORY_FILE, "w");
+-    if (file) {
+-        for (int i = 0; i < history_count; i++)
+-            fprintf(file, "%s\n", history[i]); // Log Injection (no serialize) NULL Pointer Dereference
+-        fclose(file);
++    command_history = history->command;
++    history_count = history->history_count;
++    if (command == NULL || command[0] == '\0' ||
++        (history_count > 0 &&
++            strcmp(command_history[history_count - 1], command) == 0))
++        return;
++    if (history_count == MAX_HISTORY_SIZE) {
++        free(command_history[0]);
++        shift_history_entries(command_history, history_count);
++        history_count--;
++        history->history_count = history_count;
+     }
++    if (append_history_entry(command_history, history, command))
++        write_history_file(command_history, history->history_count);
+ }
+ 
+-void history_clear(void)
++void history_clear(history_t *history)
+ {
+-    for (int i = 0; i < history_count; i++)
+-        free(history[i]);
+-    history_count = 0;
++    char **command_history;
++    int history_count;
++    int i;
++    FILE *file;
+ 
+-    FILE *file = fopen(HISTORY_FILE, "w");
+-    if (file)
++    command_history = history->command;
++    history_count = history->history_count;
++    for (i = 0; i < history_count; i++)
++        free(command_history[i]);
++    history->history_count = 0;
++    file = fopen(HISTORY_FILE, "w");
++    if (file != NULL)
+         fclose(file);
+ }
+ 
+-void history_free(void)
++void history_free(history_t *history)
+ {
+-    for (int i = 0; i < history_count; i++)
+-        free(history[i]);
++    char **command_history;
++    int history_count;
++    int i;
++
++    command_history = history->command;
++    history_count = history->history_count;
++    for (i = 0; i < history_count; i++)
++        free(command_history[i]);
++    free(command_history);
+     free(history);
+-    history = NULL;
+-    history_count = 0;
+-    history_size = 0;
+ }
+ 
+-void history_show(void)
++void history_show(char *input, history_t *history)
+ {
+-    for (int i = 0; i < history_count; i++)
+-        printf(" %d  %s\n", i + 1, history[i]);
+-}
++    char **command_history;
++    int history_count;
++    int i;
+ 
+-const char *history_get(int index)
+-{
+-    if (index < 0 || index >= history_count)
+-        return NULL;
+-    return history[index];
++    (void) input;
++    command_history = history->command;
++    history_count = history->history_count;
++    for (i = 0; i < history_count; i++)
++        printf(" %d  %s\n", i + 1, command_history[i]);
+ }
+-
+-int history_count_get(void)
+-{
+-    return history_count;
+-}
+\ No newline at end of file
