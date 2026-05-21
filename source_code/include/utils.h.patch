@@ -1,0 +1,21 @@
+diff --git a/source_code/include/utils.h b/source_code/include/utils.h
+index 19bec54..fb765f7 100644
+--- a/source_code/include/utils.h
++++ b/source_code/include/utils.h
+@@ -1,2 +1,14 @@
++/*
++** EPITECH PROJECT, 2026
++** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/include
++** File description:
++** utils.h
++*/
++
++#ifndef UTILS_H
++    #define UTILS_H
++
+ void write_color(int fd, const char *color, const char *str);
+-void load_obsidianrc();
+\ No newline at end of file
++void load_obsidianrc(void);
++
++#endif /* UTILS_H */
