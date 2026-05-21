@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2024
-** Obsidian
+** EPITECH PROJECT, 2026
+** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/src/commands
 ** File description:
-** unlock_secret_mode
+** unlock_secret_mode.c
 */
 
 #include <stdio.h>
@@ -10,9 +10,10 @@
 #include <string.h>
 #include "obsidian.h"
 
-void unlock_secret_mode()
+void unlock_secret_mode(char *input, history_t *history)
 {
-    if (IS_ADMIN) { // admin via activate_emergency_protocols -> admin123
+    (void) input;
+    if (history->is_admin) {
         printf("Secret mode unlocked! Welcome, admin.\n");
         printf("{ADMIN4242}\n");
     } else {
