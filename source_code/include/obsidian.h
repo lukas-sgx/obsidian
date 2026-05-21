@@ -6,39 +6,39 @@
 */
 
 #ifndef OBSIDIAN_H_
-#define OBSIDIAN_H_
+    #define OBSIDIAN_H_
 
-#include <stdbool.h>
+    #include "history.h"
+    #include <stdbool.h>
 
-extern bool IS_ADMIN;
-#define UNUSED __attribute__((unused))
+typedef void (*command_fn_t)(char *input, history_t *history);
 
 int my_console(void);
 
-void init_reactor();
-void check_reactor_status();
-void activate_emergency_protocols();
-void simulate_meltdown();
-void check_cooling_pressure();
-void send_status_report();
-void monitor_radiation_levels();
-void set_reactor_power();
-void run_diagnostic();
-void enable_remote_access();
-void check_cooling_pressure();
-void quit();
-void help();
-void load_fuel_rods();
-void log_system_event();
-void unlock_secret_mode();
-void load_config();
-void show_history(char *input);
-void configure_cooling_system();
-void trigger_emergency_shutdown();
-void init_labo();
-void init_workers();
-void call_api();
-void alchemy();
+void init_reactor(char *input, history_t *history);
+void check_reactor_status(char *input, history_t *history);
+void activate_emergency_protocols(char *input, history_t *history);
+void simulate_meltdown(char *input, history_t *history);
+void check_cooling_pressure(char *input, history_t *history);
+void send_status_report(char *input, history_t *history);
+void monitor_radiation_levels(char *input, history_t *history);
+void set_reactor_power(char *input, history_t *history);
+void run_diagnostic(char *input, history_t *history);
+void enable_remote_access(char *input, history_t *history);
+void check_cooling_pressure(char *input, history_t *history);
+void quit(char *input, history_t *history);
+void help(char *input, history_t *history);
+void load_fuel_rods(char *input, history_t *history);
+void log_system_event(char *input, history_t *history);
+void unlock_secret_mode(char *input, history_t *history);
+void load_config(char *input, history_t *history);
+void show_history(char *input, history_t *history);
+void configure_cooling_system(char *input, history_t *history);
+void trigger_emergency_shutdown(char *input, history_t *history);
+void init_labo(char *input, history_t *history);
+void init_workers(char *input, history_t *history);
+void call_api(char *input, history_t *history);
+void alchemy(char *input, history_t *history);
 
 enum commands {
     INIT_REACTOR,
@@ -66,7 +66,6 @@ enum commands {
     ALCHEMY,
     COMMAND_COUNT,
 };
-extern const char *command_strings[];
 
 enum commands_lib {
     INIT_STEAM_TURBINE,
@@ -76,5 +75,11 @@ enum commands_lib {
     TURBINE_TEMPERATURE,
     COMMAND_COUNT_LIB,
 };
+
+typedef struct base64_context_s {
+    const char *chars;
+    char *output;
+    int index;
+} base64_context_t;
 
 #endif /* !OBSIDIAN_H_ */
