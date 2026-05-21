@@ -1,0 +1,81 @@
+diff --git a/source_code/src/commands/check_reactor_status.c b/source_code/src/commands/check_reactor_status.c
+index 515f86e..79ed954 100644
+--- a/source_code/src/commands/check_reactor_status.c
++++ b/source_code/src/commands/check_reactor_status.c
+@@ -7,24 +7,35 @@
+ 
+ #include <stdio.h>
+ #include <unistd.h>
++#include "history.h"
++
++static char shift_char(char character, int shift)
++{
++    if (character >= 'A' && character <= 'Z')
++        return ((character - 'A' + shift) % 26) + 'A';
++    if (character >= 'a' && character <= 'z')
++        return ((character - 'a' + shift) % 26) + 'a';
++    return character;
++}
+ 
+ void encrypt_message(const char *input, char *output, int shift)
+ {
+-    for (int i = 0; input[i] != '\0'; i++) {
+-        if (input[i] >= 'A' && input[i] <= 'Z') {
+-            output[i] = ((input[i] - 'A' + shift) % 26) + 'A';
+-        } else if (input[i] >= 'a' && input[i] <= 'z') {
+-            output[i] = ((input[i] - 'a' + shift) % 26) + 'a';
+-        } else {
+-            output[i] = input[i];
+-        }
+-    }
++    int i;
++
++    for (i = 0; input[i] != '\0'; i++)
++        output[i] = shift_char(input[i], shift);
++    output[i] = '\0';
+ }
+ 
+-void check_reactor_status()
++static void print_status_summary(const char *encrypted_message)
++{
++    printf("Encrypted message: %s\n\n", encrypted_message);
++    printf("Reactor status: OK\n");
++    printf("Reactor status check complete.\n\n");
++}
++
++static void print_status_checks(void)
+ {
+-    printf("Starting reactor status check...\n");
+-    sleep(1);
+     printf("Checking core temperature...\n");
+     sleep(1);
+     printf("Core temperature: Normal\n");
+@@ -36,14 +47,20 @@ void check_reactor_status()
+     printf("Checking radiation levels...\n");
+     sleep(2);
+     printf("Radiation levels: Safe\n\n");
++}
+ 
+-    printf("Encrypting critical reactor data...\n");
++void check_reactor_status(char *input, history_t *history)
++{
+     const char *message = "ReactorStatusOK";
+     char encrypted_message[50] = {0};
+-    encrypt_message(message, encrypted_message, 3); // Cipher CAESAR -> Weak encrytpion
+-    sleep(1);
+-    printf("Encrypted message: %s\n\n", encrypted_message);
+ 
+-    printf("Reactor status: OK\n");
+-    printf("Reactor status check complete.\n\n");
+-}
+\ No newline at end of file
++    (void) input;
++    (void) history;
++    printf("Starting reactor status check...\n");
++    sleep(1);
++    print_status_checks();
++    printf("Encrypting critical reactor data...\n");
++    encrypt_message(message, encrypted_message, 3);
++    sleep(1);
++    print_status_summary(encrypted_message);
++}
