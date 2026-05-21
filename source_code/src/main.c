@@ -1,19 +1,13 @@
 /*
-** EPITECH PROJECT, 2024
-** Obsidian
+** EPITECH PROJECT, 2026
+** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/src
 ** File description:
-** main
+** main.c
 */
+
 #include "obsidian.h"
-int
-	main
-	(
-			UNUSED int       ac
-			, UNUSED char ** av
-			)
-	{
-		return
-				my_console
-				(
-						);
-	}
+
+int main(void)
+{
+    return my_console();
+}

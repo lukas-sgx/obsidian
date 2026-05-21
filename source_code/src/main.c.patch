@@ -1,0 +1,33 @@
+diff --git a/source_code/src/main.c b/source_code/src/main.c
+index cb3c479..e6f3c70 100644
+--- a/source_code/src/main.c
++++ b/source_code/src/main.c
+@@ -1,19 +1,13 @@
+ /*
+-** EPITECH PROJECT, 2024
+-** Obsidian
++** EPITECH PROJECT, 2026
++** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/src
+ ** File description:
+-** main
++** main.c
+ */
++
+ #include "obsidian.h"
+-int
+-	main
+-	(
+-			UNUSED int       ac
+-			, UNUSED char ** av
+-			)
+-	{
+-		return
+-				my_console
+-				(
+-						);
+-	}
++
++int main(void)
++{
++    return my_console();
++}
