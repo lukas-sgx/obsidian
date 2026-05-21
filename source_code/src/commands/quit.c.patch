@@ -1,0 +1,19 @@
+diff --git a/source_code/src/commands/quit.c b/source_code/src/commands/quit.c
+index 08530d4..8ff9332 100644
+--- a/source_code/src/commands/quit.c
++++ b/source_code/src/commands/quit.c
+@@ -7,9 +7,12 @@
+ 
+ #include <stdlib.h>
+ #include <stdio.h>
++#include "obsidian.h"
+ 
+-void quit()
+-{   
++void quit(char *input, history_t *history)
++{
++    (void) input;
++    (void) history;
+     printf("Exiting program...\n");
+     exit(0);
+ }

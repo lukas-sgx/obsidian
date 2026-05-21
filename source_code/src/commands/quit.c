@@ -7,9 +7,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "obsidian.h"
 
-void quit()
-{   
+void quit(char *input, history_t *history)
+{
+    (void) input;
+    (void) history;
     printf("Exiting program...\n");
     exit(0);
 }
