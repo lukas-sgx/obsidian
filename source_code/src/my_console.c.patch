@@ -1,0 +1,262 @@
+diff --git a/source_code/src/my_console.c b/source_code/src/my_console.c
+index cc34d3f..3bcf6fd 100644
+--- a/source_code/src/my_console.c
++++ b/source_code/src/my_console.c
+@@ -1,8 +1,8 @@
+ /*
+-** EPITECH PROJECT, 2024
+-** Obsidian
++** EPITECH PROJECT, 2026
++** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/src
+ ** File description:
+-** my_console
++** my_console.c
+ */
+ 
+ #include <stdio.h>
+@@ -16,9 +16,7 @@
+ #include "utils.h"
+ #include "history.h"
+ 
+-bool IS_ADMIN = false;
+-
+-const char *command_strings[] = {
++static const char *const command_strings[COMMAND_COUNT] = {
+     "init_reactor",
+     "check_reactor_status",
+     "activate_emergency_protocols",
+@@ -44,34 +42,7 @@ const char *command_strings[] = {
+     "alchemy",
+ };
+ 
+-static void initialize_commands(void (*f[COMMAND_COUNT])(char *input))
+-{
+-    f[INIT_REACTOR] = init_reactor;
+-    f[CHECK_REACTOR_STATUS] = check_reactor_status;
+-    f[ACTIVATE_EMERGENCY_PROTOCOLS] = activate_emergency_protocols;
+-    f[SIMULATE_MELTDOWN] = simulate_meltdown;
+-    f[CHECK_COOLING_PRESSURE] = check_cooling_pressure;
+-    f[SEND_STATUS_REPORT] = send_status_report;
+-    f[MONITOR_RADIATION_LEVELS] = monitor_radiation_levels;
+-    f[SET_REACTOR_POWER] = set_reactor_power;
+-    f[RUN_DIAGNOSTIC] = run_diagnostic;
+-    f[ENABLE_REMOTE_ACCESS] = enable_remote_access;
+-    f[QUIT] = quit;
+-    f[HELP] = help;
+-    f[LOAD_FUEL_RODS] = load_fuel_rods;
+-    f[LOG_SYSTEM_EVENT] = log_system_event;
+-    f[UNLOCK_SECRET_MODE] = unlock_secret_mode;
+-    f[LOAD_CONFIG] = load_config;
+-    f[HISTORY] = show_history;
+-    f[CONFIGURE_COOLING_SYSTEM] = configure_cooling_system;
+-    f[TRIGGER_EMERGENCY_SHUTDOWN] = trigger_emergency_shutdown;
+-    f[INIT_LABO] = init_labo;
+-    f[INIT_WORKERS] = init_workers;
+-    f[ALCHEMY] = alchemy;
+-    f[CALL_API] = call_api;
+-}
+-
+-const char *command_strings_lib[] = {
++static const char *const command_strings_lib[COMMAND_COUNT_LIB] = {
+     "init_steam_turbine",
+     "read_turbine_config",
+     "turbine_remote_access",
+@@ -79,79 +50,119 @@ const char *command_strings_lib[] = {
+     "run_turbine",
+ };
+ 
+-void check_pepito_lib(char *input){
+-    typedef void(*t_myfunc)(void);
++static const command_fn_t builtin_commands[COMMAND_COUNT] = {
++    init_reactor,
++    check_reactor_status,
++    activate_emergency_protocols,
++    simulate_meltdown,
++    check_cooling_pressure,
++    send_status_report,
++    monitor_radiation_levels,
++    set_reactor_power,
++    run_diagnostic,
++    enable_remote_access,
++    quit,
++    help,
++    load_fuel_rods,
++    log_system_event,
++    unlock_secret_mode,
++    load_config,
++    history_show,
++    configure_cooling_system,
++    trigger_emergency_shutdown,
++    init_labo,
++    init_workers,
++    call_api,
++    alchemy,
++};
++
++void check_pepito_lib(char *input)
++{
++    void *dlh = dlopen("obsidian_lib.so", RTLD_LAZY);
++    void (*fnc)(void) = NULL;
+ 
+-    void* dlh = dlopen("obsidian_lib.so", RTLD_LAZY);
+-    if (dlh == NULL) { 
+-        fprintf(stderr, "%s\n", dlerror()); 
+-        exit(1); 
++    if (dlh == NULL) {
++        fprintf(stderr, "%s\n", dlerror());
++        exit(1);
+     }
+-    void (*fnc)() = dlsym(dlh, input);
+-    if (fnc == NULL) { 
+-        fprintf(stderr, "%s\n", dlerror()); 
+-        exit(1); 
++    fnc = (void (*)(void)) dlsym(dlh, input);
++    if (fnc == NULL) {
++        fprintf(stderr, "%s\n", dlerror());
++        exit(1);
+     }
+     fnc();
+ }
+ 
+-static void process_command(char *line, void (*f[COMMAND_COUNT])(char *input))
++static bool handle_builtin_command(char *line,
++    command_fn_t f[COMMAND_COUNT], history_t *history)
+ {
+-    bool command_found = false;
+-
+     for (int i = 0; i < COMMAND_COUNT; i++) {
+         if (strcmp(line, command_strings[i]) == 0) {
+-            f[i](line);
+-            command_found = true;
+-            break;
++            f[i](line, history);
++            return true;
+         }
+     }
++    return false;
++}
++
++static bool handle_library_command(char *line)
++{
+     for (int i = 0; i < COMMAND_COUNT_LIB; i++) {
+         if (strcmp(line, command_strings_lib[i]) == 0) {
+             check_pepito_lib(line);
+-            command_found = true;
+-            break;
++            return true;
+         }
+     }
++    return false;
++}
+ 
+-    if (strncmp(line, "!", 1) == 0) {
+-        int index = atoi(line + 1);
+-        if (index > 0 && index <= history_count_get()) {
+-            const char *cmd = history_get(index - 1);
+-            if (cmd) {
+-                printf("%s\n", cmd);
+-                process_command((char *)cmd, f);
+-                command_found = true;
+-            }
+-        } else {
+-            printf("Invalid history index\n");
+-            command_found = true;
+-        }
++static bool resolve_history_command(const char **line, history_t *history)
++{
++    int index = 0;
++    const char *cmd;
++
++    if (strncmp(*line, "!", 1) != 0)
++        return false;
++    index = atoi(*line + 1);
++    if (index <= 0 || index > history->history_count) {
++        printf("Invalid history index\n");
++        *line = NULL;
++        return true;
+     }
+-    
+-    if (!command_found && strlen(line) > 0) {
+-        printf("Unknown command: %s\n", line);
++    cmd = history->command[index - 1];
++    if (cmd == NULL) {
++        printf("Invalid history index\n");
++        *line = NULL;
++        return true;
+     }
++    printf("%s\n", cmd);
++    *line = cmd;
++    return true;
+ }
+ 
+-void show_history(char *input)
++static void process_command(char *line,
++    command_fn_t f[COMMAND_COUNT], history_t *history)
+ {
+-    (void)input;
+-    history_show();
++    const char *resolved_line = line;
++
++    while (resolve_history_command(&resolved_line, history))
++        if (resolved_line == NULL)
++            return;
++    if (handle_builtin_command((char *)resolved_line, f, history))
++        return;
++    if (handle_library_command((char *)resolved_line))
++        return;
++    if (strlen(resolved_line) > 0)
++        printf("Unknown command: %s\n", resolved_line);
+ }
+ 
+-int my_console(void)
++void loop_command(command_fn_t f[COMMAND_COUNT], history_t *history)
+ {
+-    char *line = NULL;
+     size_t len = 0;
+-    ssize_t read;
+-    void (*f[COMMAND_COUNT])(char *input);
+-
+-    initialize_commands(f);
+-    history_init();
+-    load_obsidianrc();
++    ssize_t read = 0;
++    char *line = NULL;
+ 
+-    while (1) {
++    while (true) {
+         write_color(1, BHRED, "obsidian");
+         write(1, "> ", 3);
+         read = getline(&line, &len, stdin);
+@@ -159,16 +170,25 @@ int my_console(void)
+             break;
+         if (line[0] == '\n')
+             continue;
+-
+         line[strcspn(line, "\n")] = '\0';
+-        
+         if (strlen(line) > 0)
+-            history_add(line);
+-            
+-        process_command(line, f);
++            history_add(line, history);
++        process_command(line, f, history);
+     }
++    printf("\n");
++    if (line)
++        free(line);
++}
++
++int my_console(void)
++{
++    command_fn_t f[COMMAND_COUNT];
++    history_t *history = NULL;
+ 
+-    history_free();
+-    free(line);
++    memcpy(f, builtin_commands, sizeof(f));
++    history = history_init();
++    load_obsidianrc();
++    loop_command(f, history);
++    history_free(history);
+     return 0;
+ }
