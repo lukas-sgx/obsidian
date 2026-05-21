@@ -1,0 +1,71 @@
+diff --git a/source_code/src/commands/load_fuel_rods.c b/source_code/src/commands/load_fuel_rods.c
+index a05e3b6..4cc4408 100644
+--- a/source_code/src/commands/load_fuel_rods.c
++++ b/source_code/src/commands/load_fuel_rods.c
+@@ -6,33 +6,49 @@
+ */
+ 
+ #include <stdio.h>
++#include <string.h>
++#include "obsidian.h"
+ 
+-void load_fuel_rods()
++static void load_rods(int rod_count)
+ {
+     int fuel_rods[10];
+-    int i = 0;
+-    char input[100];
++    int j;
++
++    for (j = 0; j < rod_count; j++) {
++        fuel_rods[j] = j + 1;
++        printf("Fuel rod %d loaded.\n", fuel_rods[j]);
++        sleep(1);
++    }
++}
++
++static void reveal_secret_key(void)
++{
+     char secret_key[28] = "{The secret stone is here !}";
+-    
++
++    if (strcmp(secret_key, "{The secret stone is here !}")) {
++        printf("\nSensitive Data:\n");
++        printf("Secret Key: %s\n", secret_key);
++    }
++}
++
++void load_fuel_rods(char *input, history_t *history)
++{
++    int i;
++    char input_get[100];
++
++    (void) input;
++    (void) history;
+     printf("Loading fuel rods...\n");
+     printf("Enter the number of fuel rods to load (max 10): ");
+-    fgets(input, 100, stdin);
+-    sscanf(input, "%d", &i);
+-
++    fgets(input_get, sizeof(input_get), stdin);
++    sscanf(input_get, "%d", &i);
+     if (i > 10) {
+         printf("Error: Too many fuel rods!\n");
+         return;
+     }
+-    else if (i < 10 && i > 0) {
+-        for (int j = 0; j < i; j++) {
+-            fuel_rods[j] = j + 1;
+-            printf("Fuel rod %d loaded.\n", fuel_rods[j]);
+-            sleep(1);
+-        }
++    if (i > 0 && i < 10) {
++        load_rods(i);
+         return;
+     }
+-    if (strcmp(secret_key, "{The secret stone is here !}")) { // BYPASS & Harcoded Credentials
+-        printf("\nSensitive Data:\n");
+-        printf("Secret Key: %s\n", secret_key);
+-    }
++    reveal_secret_key();
+ }
