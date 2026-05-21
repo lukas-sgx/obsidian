@@ -7,9 +7,12 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include "history.h"
 
-void init_reactor()
+void init_reactor(char *input, history_t *history)
 {
+    (void) input;
+    (void) history;
     printf("Start of the reactor initialized\n");
     sleep(1);
     printf("Reactor status: OK\n");

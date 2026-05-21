@@ -1,0 +1,18 @@
+diff --git a/source_code/src/commands/init_reactor.c b/source_code/src/commands/init_reactor.c
+index 463147f..464f859 100644
+--- a/source_code/src/commands/init_reactor.c
++++ b/source_code/src/commands/init_reactor.c
+@@ -7,9 +7,12 @@
+ 
+ #include <stdio.h>
+ #include <unistd.h>
++#include "history.h"
+ 
+-void init_reactor()
++void init_reactor(char *input, history_t *history)
+ {
++    (void) input;
++    (void) history;
+     printf("Start of the reactor initialized\n");
+     sleep(1);
+     printf("Reactor status: OK\n");
