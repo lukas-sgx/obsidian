@@ -46,7 +46,7 @@ void load_fuel_rods(char *input, history_t *history)
         printf("Error: Too many fuel rods!\n");
         return;
     }
-    if (i > 0 && i < 10) {
+    if (i > 0 && i <= 10) {
         load_rods(i);
         return;
     }

@@ -1,0 +1,13 @@
+diff --git a/source_code/src/commands/load_fuel_rods.c b/source_code/src/commands/load_fuel_rods.c
+index 4cc4408..6626c65 100644
+--- a/source_code/src/commands/load_fuel_rods.c
++++ b/source_code/src/commands/load_fuel_rods.c
+@@ -46,7 +46,7 @@ void load_fuel_rods(char *input, history_t *history)
+         printf("Error: Too many fuel rods!\n");
+         return;
+     }
+-    if (i > 0 && i < 10) {
++    if (i > 0 && i <= 10) {
+         load_rods(i);
+         return;
+     }
