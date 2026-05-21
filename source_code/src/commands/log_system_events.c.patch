@@ -1,0 +1,46 @@
+diff --git a/source_code/src/commands/log_system_events.c b/source_code/src/commands/log_system_events.c
+index 88cb784..0b084bb 100644
+--- a/source_code/src/commands/log_system_events.c
++++ b/source_code/src/commands/log_system_events.c
+@@ -7,28 +7,28 @@
+ 
+ #include <stdio.h>
+ #include <string.h>
++#include "obsidian.h"
+ 
+-void log_system_event()
++void log_system_event(char *input, history_t *history)
+ {
++    FILE *log;
+     char command[100];
+-    char input[100];
++    char input_get[100];
+     char secret_key[32] = "{SECRET_LOG_12PIERRE34}";
+ 
++    (void) history;
+     printf("Enter command: ");
+-    fgets(input, sizeof(input), stdin);
+-    sscanf(input, "%99s", command);
+-
+-    FILE *log = fopen("Data/system.log", "a");
++    fgets(input_get, sizeof(input_get), stdin);
++    sscanf(input_get, "%99s", command);
++    log = fopen("Data/system.log", "a");
+     if (!log) {
+         printf("Error: Unable to open log file 'Data/system.log'.\n");
+         return;
+     }
+-
+-    printf("Logging event: %s\n", input);
+-    fprintf(log, "EVENT: %s\n", input);
+-
+-    if (strstr(input, "leak")) { // Hardcoded credentials et Information disclosure
++    printf("Logging event: %s\n", input_get);
++    fprintf(log, "EVENT: %s\n", input_get);
++    if (strstr(input, "leak")) {
+         fprintf(log, "SECRET_KEY_LEAKED: %s\n", secret_key);
+     }
+     fclose(log);
+-}
+\ No newline at end of file
++}
