@@ -1,0 +1,36 @@
+diff --git a/source_code/src/commands/activate_emergency_protocols.c b/source_code/src/commands/activate_emergency_protocols.c
+index d252861..3ffb376 100644
+--- a/source_code/src/commands/activate_emergency_protocols.c
++++ b/source_code/src/commands/activate_emergency_protocols.c
+@@ -10,21 +10,21 @@
+ #include <stdbool.h>
+ #include "obsidian.h"
+ 
+-void activate_emergency_protocols()
++void activate_emergency_protocols(char *input, history_t *history)
+ {
+-    char input[100];
+-    
+-    printf("Enter emergency password: ");
+-    fgets(input, sizeof(input), stdin);
+-    input[strcspn(input, "\n")] = 0;
++    char input_get[100];
+ 
+-    if (strlen(input) == 0) {
++    (void) input;
++    printf("Enter emergency password: ");
++    fgets(input_get, sizeof(input_get), stdin);
++    input_get[strcspn(input_get, "\n")] = 0;
++    if (strlen(input_get) == 0) {
+         printf("No password entered, emergency protocols not activated.\n");
+         return;
+     }
+-    if (strcmp(input, "admin123") == 0) { // Hardcoded Credentials
+-        printf("{Emergency protocols activated, you are now admin !}\n"); //flag
+-        IS_ADMIN = true; // admin mais help pareil
++    if (strcmp(input_get, "admin123") == 0) {
++        printf("{Emergency protocols activated, you are now admin !}\n");
++        history->is_admin = true;
+     }
+     return;
+ }
