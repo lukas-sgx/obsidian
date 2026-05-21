@@ -1,0 +1,78 @@
+diff --git a/source_code/src/commands/check_cooling_pressure.c b/source_code/src/commands/check_cooling_pressure.c
+index eb9d5ea..22d3ec4 100644
+--- a/source_code/src/commands/check_cooling_pressure.c
++++ b/source_code/src/commands/check_cooling_pressure.c
+@@ -1,13 +1,14 @@
+ /*
+-** EPITECH PROJECT, 2024
+-** Obsidian
++** EPITECH PROJECT, 2026
++** ~/epitech/delivery/G-SEC-210-NCE-2-1-obsidian-2/source_code/src/commands
+ ** File description:
+-** check_cooling_pressure
++** check_cooling_pressure.c
+ */
+ 
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
++#include "obsidian.h"
+ 
+ static void load_data(char *data)
+ {
+@@ -19,18 +20,37 @@ static void log_pressure_status(const char *status)
+     printf("Cooling pressure status: %s\n", status);
+ }
+ 
+-static void simulate_sensor_reading()
++static void simulate_sensor_reading(void)
+ {
+     printf("Simulating sensor reading...\n");
+     sleep(1);
+     printf("Sensor reading complete.\n");
+ }
+ 
+-void check_cooling_pressure()
++static void print_temporary_buffer(void)
+ {
+-    char *data = (char *)malloc(16);
++    char temp_buffer[32];
++
++    snprintf(temp_buffer, sizeof(temp_buffer),
++        "Temporary data: %d", rand() % 100);
++    printf("Temporary buffer: %s\n", temp_buffer);
++}
++
++static void print_sensitive_info(char *data, char sensitive_info[32])
++{
++    if (strcmp(data, "Pressure OK")) {
++        printf("Sensitive Info: %s\n", sensitive_info);
++    }
++}
++
++void check_cooling_pressure(char *input, history_t *history)
++{
++    char *data;
+     char sensitive_info[32] = "{Sensitive Data}";
+ 
++    (void) input;
++    (void) history;
++    data = (char *)malloc(16);
+     load_data(data);
+     printf("Cooling pressure check in progress...\n");
+     sleep(2);
+@@ -40,12 +60,8 @@ void check_cooling_pressure()
+     log_pressure_status(data);
+     free(data);
+     sleep(3);
+-    if (strcmp(data, "Pressure OK")) { // use after free
+-        printf("Sensitive Info: %s\n", sensitive_info);
+-    }
+-    char temp_buffer[32];
+-    snprintf(temp_buffer, sizeof(temp_buffer), "Temporary data: %d", rand() % 100);
+-    printf("Temporary buffer: %s\n", temp_buffer);
++    print_sensitive_info(data, sensitive_info);
++    print_temporary_buffer();
+     simulate_sensor_reading();
+     printf("Cooling pressure check complete.\n");
+ }
