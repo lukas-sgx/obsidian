@@ -7,32 +7,8 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "history.h"
-
-static char shift_char(char character, int shift)
-{
-    if (character >= 'A' && character <= 'Z')
-        return ((character - 'A' + shift) % 26) + 'A';
-    if (character >= 'a' && character <= 'z')
-        return ((character - 'a' + shift) % 26) + 'a';
-    return character;
-}
-
-void encrypt_message(const char *input, char *output, int shift)
-{
-    int i;
-
-    for (i = 0; input[i] != '\0'; i++)
-        output[i] = shift_char(input[i], shift);
-    output[i] = '\0';
-}
-
-static void print_status_summary(const char *encrypted_message)
-{
-    printf("Encrypted message: %s\n\n", encrypted_message);
-    printf("Reactor status: OK\n");
-    printf("Reactor status check complete.\n\n");
-}
 
 static void print_status_checks(void)
 {
@@ -49,10 +25,17 @@ static void print_status_checks(void)
     printf("Radiation levels: Safe\n\n");
 }
 
+static void print_status_summary(const char *encrypted_message)
+{
+    printf("Encrypted message: %s\n\n", encrypted_message);
+    printf("Reactor status: OK\n");
+    printf("Reactor status check complete.\n\n");
+}
+
 void check_reactor_status(char *input, history_t *history)
 {
-    const char *message = "ReactorStatusOK";
-    char encrypted_message[50] = {0};
+    const char message[] = "ReactorStatusOK";
+    char *encrypted_message = malloc(sizeof(char) * 66);
 
     (void) input;
     (void) history;
@@ -60,7 +43,7 @@ void check_reactor_status(char *input, history_t *history)
     sleep(1);
     print_status_checks();
     printf("Encrypting critical reactor data...\n");
-    encrypt_message(message, encrypted_message, 3);
+    compute_sha256_evp(message, &encrypted_message);
     sleep(1);
     print_status_summary(encrypted_message);
 }

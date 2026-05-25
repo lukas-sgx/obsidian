@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "obsidian.h"
 
-// admin via activate_emergency_protocols -> admin123
 void trigger_emergency_shutdown(char *input, history_t *history)
 {
     (void) input;
@@ -17,6 +16,5 @@ void trigger_emergency_shutdown(char *input, history_t *history)
         printf("You are not authorized to trigger an emergency shutdown.\n");
         return;
     }
-    printf("{SHUTDOWN}");
     exit(0);
 }

@@ -21,20 +21,10 @@ static void load_rods(int rod_count)
     }
 }
 
-static void reveal_secret_key(void)
-{
-    char secret_key[28] = "{The secret stone is here !}";
-
-    if (strcmp(secret_key, "{The secret stone is here !}")) {
-        printf("\nSensitive Data:\n");
-        printf("Secret Key: %s\n", secret_key);
-    }
-}
-
 void load_fuel_rods(char *input, history_t *history)
 {
-    int i;
-    char input_get[100];
+    int i = 0;
+    char input_get[100] = {0};
 
     (void) input;
     (void) history;
@@ -50,5 +40,4 @@ void load_fuel_rods(char *input, history_t *history)
         load_rods(i);
         return;
     }
-    reveal_secret_key();
 }

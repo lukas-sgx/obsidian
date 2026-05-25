@@ -11,12 +11,12 @@
 
 void log_system_event(char *input, history_t *history)
 {
-    FILE *log;
-    char command[100];
-    char input_get[100];
-    char secret_key[32] = "{SECRET_LOG_12PIERRE34}";
+    FILE *log = NULL;
+    char command[100] = {0};
+    char input_get[100] = {0};
 
     (void) history;
+    (void) input;
     printf("Enter command: ");
     fgets(input_get, sizeof(input_get), stdin);
     sscanf(input_get, "%99s", command);
@@ -27,8 +27,5 @@ void log_system_event(char *input, history_t *history)
     }
     printf("Logging event: %s\n", input_get);
     fprintf(log, "EVENT: %s\n", input_get);
-    if (strstr(input, "leak")) {
-        fprintf(log, "SECRET_KEY_LEAKED: %s\n", secret_key);
-    }
     fclose(log);
 }

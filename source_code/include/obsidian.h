@@ -9,7 +9,11 @@
     #define OBSIDIAN_H_
 
     #include "history.h"
+    #include "utils.h"
     #include <stdbool.h>
+
+
+    #define ACCESS_STATE_FILE "/tmp/obsidian_remote_access.state"
 
 typedef void (*command_fn_t)(char *input, history_t *history);
 

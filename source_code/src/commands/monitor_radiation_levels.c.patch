@@ -44,3 +44,23 @@ index 5332f47..fe2ce8e 100644
 +    fgets(buffer, sizeof(buffer), stdin);
 +    printf("Radiation Levels: %s\n", buffer);
 +}
+diff --git a/source_code/src/commands/monitor_radiation_levels.c b/source_code/src/commands/monitor_radiation_levels.c
+index fe2ce8e..3141141 100644
+--- a/source_code/src/commands/monitor_radiation_levels.c
++++ b/source_code/src/commands/monitor_radiation_levels.c
+@@ -9,14 +9,9 @@
+ #include <string.h>
+ #include "obsidian.h"
+ 
+-void secret_function(void)
+-{
+-    printf("{The stone isn't in the pocket anymore ...}\n");
+-}
+-
+ void monitor_radiation_levels(char *input, history_t *history)
+ {
+-    char buffer[10];
++    char buffer[10] = {0};
+ 
+     (void) input;
+     (void) history;

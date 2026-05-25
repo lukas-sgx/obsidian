@@ -15,7 +15,6 @@ void unlock_secret_mode(char *input, history_t *history)
     (void) input;
     if (history->is_admin) {
         printf("Secret mode unlocked! Welcome, admin.\n");
-        printf("{ADMIN4242}\n");
     } else {
         printf("Access denied. You do not have the required privileges.\n");
     }

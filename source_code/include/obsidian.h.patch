@@ -89,3 +89,20 @@ index a1ddb9d..0439f3a 100644
 +} base64_context_t;
 +
  #endif /* !OBSIDIAN_H_ */
+diff --git a/source_code/include/obsidian.h b/source_code/include/obsidian.h
+index 0439f3a..97a2976 100644
+--- a/source_code/include/obsidian.h
++++ b/source_code/include/obsidian.h
+@@ -9,8 +9,12 @@
+     #define OBSIDIAN_H_
+ 
+     #include "history.h"
++    #include "utils.h"
+     #include <stdbool.h>
+ 
++
++    #define ACCESS_STATE_FILE "/tmp/obsidian_remote_access.state"
++
+ typedef void (*command_fn_t)(char *input, history_t *history);
+ 
+ int my_console(void);

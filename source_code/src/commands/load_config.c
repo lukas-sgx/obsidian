@@ -10,29 +10,20 @@
 #include <string.h>
 #include <fcntl.h>
 #include "obsidian.h"
-
-static char const adminPassword[] =
-    "ThisIsTheBestPassword";
-
-void check_password(char *str)
-{
-    if (strcmp(str, adminPassword) == 0)
-        printf("{Correct password! Welcome, admin.}\n");
-}
+#include "utils.h"
 
 void load_config(char *input, history_t *history)
 {
-    char array[8] = {};
+    char array[8] = {0};
     int fd;
 
     (void) input;
     (void) history;
+    if (!history->is_admin)
+        return;
     dprintf(1, "Loading configuration file from ./config.ini\n");
     fd = open("./config.ini", O_RDONLY);
-    read(fd, array, sizeof(array));
-    if (0)
-        ;
-    else
+    if (0 != read(fd, array, sizeof(array)))
         printf("failure!\n");
     close(fd);
     return;

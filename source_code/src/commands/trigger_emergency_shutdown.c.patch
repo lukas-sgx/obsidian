@@ -20,3 +20,22 @@ index e4f2111..686de41 100644
 +    printf("{SHUTDOWN}");
      exit(0);
  }
+diff --git a/source_code/src/commands/trigger_emergency_shutdown.c b/source_code/src/commands/trigger_emergency_shutdown.c
+index 686de41..8dad9e1 100644
+--- a/source_code/src/commands/trigger_emergency_shutdown.c
++++ b/source_code/src/commands/trigger_emergency_shutdown.c
+@@ -9,7 +9,6 @@
+ #include <stdlib.h>
+ #include "obsidian.h"
+ 
+-// admin via activate_emergency_protocols -> admin123
+ void trigger_emergency_shutdown(char *input, history_t *history)
+ {
+     (void) input;
+@@ -17,6 +16,5 @@ void trigger_emergency_shutdown(char *input, history_t *history)
+         printf("You are not authorized to trigger an emergency shutdown.\n");
+         return;
+     }
+-    printf("{SHUTDOWN}");
+     exit(0);
+ }

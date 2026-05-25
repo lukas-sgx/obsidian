@@ -37,20 +37,20 @@ static void print_diagnostic_result(int *data, char *sensitive_info)
 
 void run_diagnostic(char *input, history_t *history)
 {
-    char input_get[32];
-    char sensitive_info[64] = "{SECRET DIAGNOSTIC KEY}";
+    char input_get[32] = {0};
+    char debug_info[] = "Debug mode";
     int diagnostic_code = 0;
-    int *data;
+    int *data = NULL;
 
     (void) input;
     (void) history;
     printf("Enter diagnostic mode (normal/debug/advanced): ");
     fgets(input_get, sizeof(input_get), stdin);
     input_get[strcspn(input_get, "\n")] = '\0';
-    data = get_diagnostic_data(input_get, sensitive_info, &diagnostic_code);
+    data = get_diagnostic_data(input_get, debug_info, &diagnostic_code);
     printf("Running diagnostic...\n");
     sleep(1);
-    print_diagnostic_result(data, sensitive_info);
+    print_diagnostic_result(data, debug_info);
     printf("Performing system health check...\n");
     sleep(1);
     printf("System health: OK\n");

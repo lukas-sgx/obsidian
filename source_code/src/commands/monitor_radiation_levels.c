@@ -9,14 +9,9 @@
 #include <string.h>
 #include "obsidian.h"
 
-void secret_function(void)
-{
-    printf("{The stone isn't in the pocket anymore ...}\n");
-}
-
 void monitor_radiation_levels(char *input, history_t *history)
 {
-    char buffer[10];
+    char buffer[10] = {0};
 
     (void) input;
     (void) history;

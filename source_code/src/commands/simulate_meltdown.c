@@ -11,15 +11,6 @@
 #include <string.h>
 #include "obsidian.h"
 
-static int maybe_leak_secret_code(int random_number, const char *secret_code)
-{
-    if (random_number < 5) {
-        printf("Critical Error: Secret Code Leaked: %s\n", secret_code);
-        return 1;
-    }
-    return 0;
-}
-
 static void print_status_report(int random_number, const char *reactor_status)
 {
     printf("Reactor core temperature: %d\n", random_number);
@@ -35,11 +26,7 @@ static void report_status(int random_number, const char *message,
 
 static void report_overheating(int random_number)
 {
-    const char secret_code[] = "{MELTDOWN1234}";
-
     printf("Meltdown simulated! Reactor core is overheating.\n");
-    if (maybe_leak_secret_code(random_number, secret_code))
-        return;
     print_status_report(random_number, "Reactor Overheating");
 }
 
@@ -69,8 +56,8 @@ void simulate_meltdown(char *input, history_t *history)
 {
     int random_number = rand() % 100;
 
-    (void) input;
-    (void) history;
+    (void)input;
+    (void)history;
     printf("Generated random number: %d\n", random_number);
     handle_meltdown_status(random_number);
 }

@@ -36,7 +36,7 @@ void configure_cooling_system(char *input, history_t *history)
 {
     char *config_file = "Data/cooling_config.txt";
     char buffer[64];
-    int result;
+    int result = 0;
 
     (void) input;
     (void) history;
@@ -45,7 +45,10 @@ void configure_cooling_system(char *input, history_t *history)
         return;
     }
     printf("Reading configuration file: %s\n", config_file);
-    printf("Applying configuration: %s\n", buffer);
-    result = system(buffer);
+    if (history->is_admin && is_allowed_exec(buffer)) {
+        printf("Applying configuration: %s\n", buffer);
+        result = system(buffer);
+    } else
+        result = 1;
     report_configuration_result(result);
 }

@@ -69,3 +69,49 @@ index a05e3b6..4cc4408 100644
 -    }
 +    reveal_secret_key();
  }
+diff --git a/source_code/src/commands/load_fuel_rods.c b/source_code/src/commands/load_fuel_rods.c
+index 4cc4408..6626c65 100644
+--- a/source_code/src/commands/load_fuel_rods.c
++++ b/source_code/src/commands/load_fuel_rods.c
+@@ -46,7 +46,7 @@ void load_fuel_rods(char *input, history_t *history)
+         printf("Error: Too many fuel rods!\n");
+         return;
+     }
+-    if (i > 0 && i < 10) {
++    if (i > 0 && i <= 10) {
+         load_rods(i);
+         return;
+     }
+diff --git a/source_code/src/commands/load_fuel_rods.c b/source_code/src/commands/load_fuel_rods.c
+index 6626c65..da51c3b 100644
+--- a/source_code/src/commands/load_fuel_rods.c
++++ b/source_code/src/commands/load_fuel_rods.c
+@@ -21,20 +21,10 @@ static void load_rods(int rod_count)
+     }
+ }
+ 
+-static void reveal_secret_key(void)
+-{
+-    char secret_key[28] = "{The secret stone is here !}";
+-
+-    if (strcmp(secret_key, "{The secret stone is here !}")) {
+-        printf("\nSensitive Data:\n");
+-        printf("Secret Key: %s\n", secret_key);
+-    }
+-}
+-
+ void load_fuel_rods(char *input, history_t *history)
+ {
+-    int i;
+-    char input_get[100];
++    int i = 0;
++    char input_get[100] = {0};
+ 
+     (void) input;
+     (void) history;
+@@ -50,5 +40,4 @@ void load_fuel_rods(char *input, history_t *history)
+         load_rods(i);
+         return;
+     }
+-    reveal_secret_key();
+ }

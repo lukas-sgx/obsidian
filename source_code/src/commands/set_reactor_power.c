@@ -11,16 +11,6 @@
 #include <limits.h>
 #include "obsidian.h"
 
-static void print_overflow_warning(void)
-{
-    printf("\nReactor power adjustment may be incorrect.\n");
-    printf("Reactor systems are behaving erratically!\n");
-    printf("Reactor core temperature rising uncontrollably...\n");
-    printf("{12EXPLOSION34}\n");
-    printf("Emergency shutdown initiated!\n\n");
-    exit(1);
-}
-
 static void print_power_result(int new_power)
 {
     if (new_power < 0) {
@@ -45,7 +35,7 @@ void set_reactor_power(char *input, history_t *history)
     power[strcspn(power, "\n")] = 0;
     input_power = atoi(power);
     if (input_power > INT_MAX - 1000)
-        print_overflow_warning();
+        return;
     new_power = input_power + 1000;
     print_power_result(new_power);
 }

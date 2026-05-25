@@ -34,3 +34,34 @@ index 821eb2f..f08758c 100644
  	upx --best $(NAME)
  
  clean:
+diff --git a/source_code/Makefile b/source_code/Makefile
+index f08758c..cec4c3f 100644
+--- a/source_code/Makefile
++++ b/source_code/Makefile
+@@ -18,11 +18,12 @@ B_SRC	=	src/commands/activate_emergency_protocols.c	\
+ 			src/commands/unlock_secret_mode.c	\
+ 			src/commands/load_config.c	\
+ 			src/commands/history.c 	\
+-			src/commands/trigger_emergency_shutdown.c	\
++			src/commands/trigger_emergency_shutdown.c
+ 
+ G_SRC	=	src/main.c	\
+ 		src/my_console.c \
+-			src/utils.c
++			src/utils.c \
++			src/secure/sha.c
+ 
+ B_OBJ = $(B_SRC:.c=.o)
+ 
+@@ -32,9 +33,9 @@ OBJ	= $(B_OBJ) $(G_OBJ)
+ 
+ NAME =	obsidian
+ 
+-LDLIBS =  -ldl
++LDLIBS =  -ldl -lcrypto
+ 
+-CFLAGS += -Wall -Wextra -fPIC -fno-stack-protector -Wno-implicit-function-declaration -fno-pie
++CFLAGS += -Wall -Wextra -fPIC -fno-stack-protector -Wno-unused-result -Wno-implicit-function-declaration -fno-pie
+ 
+ CPPFLAGS += -iquote ./include
+ 

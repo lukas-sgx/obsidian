@@ -229,3 +229,182 @@ index 1495158..58e06f5 100644
 -    return history_count;
 -}
 \ No newline at end of file
+diff --git a/source_code/src/commands/history.c b/source_code/src/commands/history.c
+index 58e06f5..d5d948b 100644
+--- a/source_code/src/commands/history.c
++++ b/source_code/src/commands/history.c
+@@ -11,12 +11,25 @@
+ #include <unistd.h>
+ #include "history.h"
+ 
++static char *sanitize_entry(const char *entry)
++{
++    const char *cmd = strdup(entry);
++
++    if (!cmd)
++        return NULL;
++    if (strstr(cmd, ";") || strstr(cmd, "&&")
++        || strstr(cmd, "||") || strstr(cmd, "$"))
++        return NULL;
++    return (char *)cmd;
++}
++
+ static int append_history_entry(
+     char **history_command,
+     history_t *history,
+     const char *line)
+ {
+-    history_command[history->history_count] = strdup(line);
++    if (line)
++        history_command[history->history_count] = sanitize_entry(line);
+     if (history_command[history->history_count] == NULL)
+         return 0;
+     history->history_count++;
+@@ -25,22 +38,20 @@ static int append_history_entry(
+ 
+ static void shift_history_entries(char **command_history, int history_count)
+ {
+-    int i;
+-
+-    for (i = 0; i < history_count - 1; i++)
+-        command_history[i] = command_history[i + 1];
++    for (int i = 0; i < history_count - 1; i++)
++        if (command_history[i + 1])
++            command_history[i] = command_history[i + 1];
+ }
+ 
+ static void write_history_file(char **command_history, int history_count)
+ {
+-    FILE *file;
+-    int i;
++    FILE *file = fopen(HISTORY_FILE, "w");
+ 
+-    file = fopen(HISTORY_FILE, "w");
+     if (file == NULL)
+         return;
+-    for (i = 0; i < history_count; i++)
+-        fprintf(file, "%s\n", command_history[i]);
++    for (int i = 0; i < history_count; i++)
++        if (command_history[i])
++            fprintf(file, "%s\n", command_history[i]);
+     fclose(file);
+ }
+ 
+@@ -49,7 +60,7 @@ static void load_history_entries(
+     history_t *history,
+     char **history_command)
+ {
+-    char line[MAX_COMMAND_LENGTH];
++    char line[MAX_COMMAND_LENGTH] = {0};
+ 
+     while (fgets(line, sizeof(line), file) != NULL &&
+         history->history_count < MAX_HISTORY_SIZE) {
+@@ -63,9 +74,8 @@ static void load_history_entries(
+ 
+ static void load_history_file(history_t *history, char **history_command)
+ {
+-    FILE *file;
++    FILE *file = fopen(HISTORY_FILE, "r");
+ 
+-    file = fopen(HISTORY_FILE, "r");
+     if (file == NULL)
+         return;
+     load_history_entries(file, history, history_command);
+@@ -74,10 +84,9 @@ static void load_history_file(history_t *history, char **history_command)
+ 
+ history_t *history_init(void)
+ {
+-    char **history_command;
+-    history_t *history;
++    char **history_command = NULL;
++    history_t *history = malloc(sizeof(history_t));
+ 
+-    history = malloc(sizeof(history_t));
+     if (history == NULL)
+         return NULL;
+     history_command = malloc(sizeof(char *) * MAX_HISTORY_SIZE);
+@@ -94,17 +103,16 @@ history_t *history_init(void)
+ 
+ void history_add(const char *command, history_t *history)
+ {
+-    char **command_history;
+-    int history_count;
++    char **command_history = history->command;
++    int history_count = history->history_count;
+ 
+-    command_history = history->command;
+-    history_count = history->history_count;
+     if (command == NULL || command[0] == '\0' ||
+         (history_count > 0 &&
+             strcmp(command_history[history_count - 1], command) == 0))
+         return;
+     if (history_count == MAX_HISTORY_SIZE) {
+-        free(command_history[0]);
++        if (command_history[0])
++            free(command_history[0]);
+         shift_history_entries(command_history, history_count);
+         history_count--;
+         history->history_count = history_count;
+@@ -115,14 +123,11 @@ void history_add(const char *command, history_t *history)
+ 
+ void history_clear(history_t *history)
+ {
+-    char **command_history;
+-    int history_count;
+-    int i;
+-    FILE *file;
+-
+-    command_history = history->command;
+-    history_count = history->history_count;
+-    for (i = 0; i < history_count; i++)
++    char **command_history = history->command;
++    int history_count = history->history_count;
++    FILE *file = NULL;
++
++    for (int i = 0; i < history_count; i++)
+         free(command_history[i]);
+     history->history_count = 0;
+     file = fopen(HISTORY_FILE, "w");
+@@ -132,27 +137,25 @@ void history_clear(history_t *history)
+ 
+ void history_free(history_t *history)
+ {
+-    char **command_history;
+-    int history_count;
+-    int i;
+-
+-    command_history = history->command;
+-    history_count = history->history_count;
+-    for (i = 0; i < history_count; i++)
+-        free(command_history[i]);
+-    free(command_history);
+-    free(history);
++    char **command_history = history->command;
++    int history_count = history->history_count;
++
++    for (int i = 0; i < history_count; i++)
++        if (command_history[i])
++            free(command_history[i]);
++    if (command_history)
++        free(command_history);
++    if (history)
++        free(history);
+ }
+ 
+ void history_show(char *input, history_t *history)
+ {
+-    char **command_history;
+-    int history_count;
+-    int i;
++    char **command_history = history->command;
++    int history_count = history->history_count;
+ 
+     (void) input;
+-    command_history = history->command;
+-    history_count = history->history_count;
+-    for (i = 0; i < history_count; i++)
+-        printf(" %d  %s\n", i + 1, command_history[i]);
++    for (int i = 0; i < history_count; i++)
++        if (command_history[i])
++            printf(" %d  %s\n", i + 1, command_history[i]);
+ }
