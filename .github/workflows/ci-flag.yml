@@ -13,4 +13,5 @@ jobs:
     - name: auto flag
       run: |
         cd POC
+        bash setup.sh
         bash auto_flag.sh
