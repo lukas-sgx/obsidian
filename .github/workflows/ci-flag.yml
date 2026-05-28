@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: auto flag
-      run: |
-        pwd
-        ls
-        cd obsidian
-        cd POC
-        ./auto_flag.sh
+      run:
+        ls -laR
+        ./POC/auto_flag.sh
