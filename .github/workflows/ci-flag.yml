@@ -11,5 +11,6 @@ jobs:
     steps:
     - name: auto flag
       run: |
-        cd POC
+        pwd
+        cd ../../POC
         ./auto_flag.sh
