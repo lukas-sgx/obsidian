@@ -1,0 +1,15 @@
+# This is a basic workflow that is manually triggered
+
+name: CI - Auto Flag
+
+on:
+  push:
+    branches: ["main"]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: auto flag
+      run: |
+        cd POC
+        ./auto_flag.sh
