@@ -11,6 +11,6 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - name: auto flag
-      run:
+      run: |
         cd POC
         ./auto_flag.sh
