@@ -9,7 +9,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v6
     - name: auto flag
       run:
-        ls -laR
-        ./POC/auto_flag.sh
+        cd POC
+        ./auto_flag.sh
