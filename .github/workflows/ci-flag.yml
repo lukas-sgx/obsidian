@@ -12,5 +12,8 @@ jobs:
     - name: auto flag
       run: |
         pwd
-        cd ../../POC
+        ls
+        cd ..
+        ls
+        cd ../POC
         ./auto_flag.sh
